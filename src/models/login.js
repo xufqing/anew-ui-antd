@@ -1,6 +1,6 @@
 import { stringify } from 'querystring';
 import { history } from 'umi';
-import { fakeAccountLogin } from '@/services/login';
+import { AccountLogin,AccountLogout } from '@/services/login';
 import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 const Model = {
@@ -10,13 +10,13 @@ const Model = {
   },
   effects: {
     *login({ payload }, { call, put }) {
-      const response = yield call(fakeAccountLogin, payload);
-      yield put({
-        type: 'changeLoginStatus',
-        payload: response.data,
-      }); // Login successfully
+      const response = yield call(AccountLogin, payload);
 
       if (response.status === true && response.code === 200) {
+        yield put({
+          type: 'changeLoginStatus',
+          payload: response.data,
+        }); // Login successfully
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('expires', response.data.expires);
         const userInfo = {
@@ -48,12 +48,8 @@ const Model = {
       }
     },
 
-    logout() {
+    *logout({ payload }, { call, put })  {
       const { redirect } = getPageQuery(); // Note: There may be security issues, please note
-      localStorage.removeItem('token');
-      localStorage.removeItem('expires');
-      localStorage.removeItem('anew-authority');
-      localStorage.removeItem('user');
       if (window.location.pathname !== '/user/login' && !redirect) {
         history.replace({
           pathname: '/user/login',
@@ -62,6 +58,11 @@ const Model = {
           }),
         });
       }
+      localStorage.removeItem('expires');
+      localStorage.removeItem('anew-authority');
+      localStorage.removeItem('user');
+      yield call(AccountLogout, payload);
+      localStorage.removeItem('token');
     },
   },
   reducers: {

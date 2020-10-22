@@ -4,13 +4,16 @@
  * https://github.com/ant-design/ant-design-pro-layout
  */
 import ProLayout, { DefaultFooter } from '@ant-design/pro-layout';
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
+import { getMenuTreeData } from '@/services/menu';
 import { Link, useIntl, connect, history } from 'umi';
 import { Result, Button } from 'antd';
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { getMatchMenu } from '@umijs/route-utils';
 import logo from '../assets/logo.svg';
+import IconFont from '@/components/IconFont' // 自定义图标
+
 const noMatch = (
   <Result
     status={403}
@@ -24,41 +27,35 @@ const noMatch = (
   />
 );
 
-/**
- * use Authorized check all menu item
- */
-// const menuDataRender = (menuList) =>
-//   menuList.map((item) => {
-//     const localItem = {
-//       ...item,
-//       children: item.children ? menuDataRender(item.children) : undefined,
-//     };
-//     return Authorized.check(item.authority, localItem, null);
-//   });
-
 const defaultFooterDom = (
   <DefaultFooter
     copyright={`${new Date().getFullYear()} anew`}
   />
 );
 
+const loopMenuItem = (menus) =>
+  menus.map(({ icon, children, ...item }) => ({
+    ...item,
+    icon: icon && <IconFont type={icon} />,
+    children: children && loopMenuItem(children),
+  }));
+
 const BasicLayout = (props) => {
+  const [menuData, setMenuData] = useState([]);
+
   const {
     dispatch,
     children,
     settings,
-    menuData,
     location = {
       pathname: '/',
     },
   } = props;
   const menuDataRef = useRef([]);
   useEffect(() => {
-    if (dispatch) {
-      dispatch({
-        type: 'menu/getMenuTree',
-      });
-    }
+    getMenuTreeData().then(resp => {
+      setMenuData(resp.data || []);
+    });
   }, []);
   /**
    * init variables
@@ -112,7 +109,7 @@ const BasicLayout = (props) => {
         );
       }}
       footerRender={() => defaultFooterDom}
-      menuDataRender={() => menuData}
+      menuDataRender={() => loopMenuItem(menuData)}
       rightContentRender={() => <RightContent />}
       postMenuData={(menuData) => {
         menuDataRef.current = menuData || [];
@@ -128,8 +125,7 @@ const BasicLayout = (props) => {
   );
 };
 
-export default connect(({ global, menu,settings }) => ({
+export default connect(({ global,settings }) => ({
   collapsed: global.collapsed,
   settings,
-  menuData: menu.menuData,
 }))(BasicLayout);

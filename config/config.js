@@ -46,27 +46,48 @@ export default defineConfig({
           routes: [
             {
               path: '/',
-              redirect: '/dashboard',
+              redirect: '/workplace',
             },
             {
-              path: '/dashboard',
-              name: 'dashboard',
-              icon: 'smile',
+              path: '/workplace',
+              name: 'workplace',
               component: './Dashboard',
             },
             {
               path: '/system',
               name: 'system',
-              icon: 'crown',
-              //component: './System',
+              //component: './Dashboard',
               authority: ['admin'],
               routes: [
                 {
-                  path: '/user',
+                  path: '/system/user',
                   name: 'user',
-                  icon: 'smile',
                   component: './System/user',
-                  authority: ['admin'],
+                  //authority: ['admin'],
+                },
+                {
+                  path: '/system/dept',
+                  name: 'dept',
+                  component: './System/dept',
+                  //authority: ['admin'],
+                },
+                {
+                  path: '/system/role',
+                  name: 'role',
+                  component: './System/role',
+                  //authority: ['admin'],
+                },
+                {
+                  path: '/system/menu',
+                  name: 'menu',
+                  component: './System/menu',
+                  //authority: ['admin'],
+                },
+                {
+                  path: '/system/api',
+                  name: 'api',
+                  component: './System/api',
+                  //authority: ['admin'],
                 },
               ],
             },

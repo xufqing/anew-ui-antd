@@ -14,7 +14,7 @@ export default {
         '^': '',
       },
     },
-    // 下面的静态资源代理，头像的，可以不管
+    // 代理上传的头像
     '/upload/': {
       target: 'http://127.0.0.1:8011',
       changeOrigin: true,
