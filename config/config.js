@@ -51,13 +51,13 @@ export default defineConfig({
             {
               path: '/workplace',
               name: 'workplace',
-              component: './Dashboard',
+              component: './Workplace',
             },
             {
               path: '/system',
               name: 'system',
               //component: './Dashboard',
-              authority: ['admin'],
+              //authority: ['admin'],
               routes: [
                 {
                   path: '/system/user',

@@ -7,9 +7,6 @@ const proSettings = {
   fixedHeader: false,
   fixSiderbar: true,
   colorWeak: false,
-  menu: {
-    locale: false,
-  },
   title: 'Ant Design Pro',
   pwa: false,
   iconfontUrl: '',

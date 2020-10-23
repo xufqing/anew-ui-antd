@@ -12,7 +12,7 @@ import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { getMatchMenu } from '@umijs/route-utils';
 import logo from '../assets/logo.svg';
-import IconFont from '@/components/IconFont' // 自定义图标
+import IconFont from '@/components/IconFont'; // 自定义图标
 
 const noMatch = (
   <Result
@@ -26,12 +26,7 @@ const noMatch = (
     }
   />
 );
-
-const defaultFooterDom = (
-  <DefaultFooter
-    copyright={`${new Date().getFullYear()} anew`}
-  />
-);
+const defaultFooterDom = <DefaultFooter links={[]} copyright={`${new Date().getFullYear()} Anew`} />;
 
 const loopMenuItem = (menus) =>
   menus.map(({ icon, children, ...item }) => ({
@@ -42,7 +37,7 @@ const loopMenuItem = (menus) =>
 
 const BasicLayout = (props) => {
   const [menuData, setMenuData] = useState([]);
-
+  const [loading, setLoading] = useState(true);
   const {
     dispatch,
     children,
@@ -53,8 +48,11 @@ const BasicLayout = (props) => {
   } = props;
   const menuDataRef = useRef([]);
   useEffect(() => {
-    getMenuTreeData().then(resp => {
-      setMenuData(resp.data || []);
+    setMenuData([]);
+    setLoading(true);
+    getMenuTreeData().then((resp) => {
+      setMenuData(resp.data);
+      setLoading(false);
     });
   }, []);
   /**
@@ -77,13 +75,15 @@ const BasicLayout = (props) => {
       },
     [location.pathname],
   );
-  const { formatMessage } = useIntl();
+  const {} = useIntl();
   return (
     <ProLayout
       logo={logo}
-      formatMessage={formatMessage}
       onCollapse={handleMenuCollapse}
       onMenuHeaderClick={() => history.push('/')}
+      menu={{
+        loading,
+      }}
       menuItemRender={(menuItemProps, defaultDom) => {
         if (menuItemProps.isUrl || !menuItemProps.path) {
           return defaultDom;
@@ -94,9 +94,7 @@ const BasicLayout = (props) => {
       breadcrumbRender={(routers = []) => [
         {
           path: '/',
-          breadcrumbName: formatMessage({
-            id: 'menu.home',
-          }),
+          breadcrumbName: '首页',
         },
         ...routers,
       ]}
@@ -125,7 +123,7 @@ const BasicLayout = (props) => {
   );
 };
 
-export default connect(({ global,settings }) => ({
+export default connect(({ global, settings }) => ({
   collapsed: global.collapsed,
   settings,
 }))(BasicLayout);
