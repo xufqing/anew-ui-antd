@@ -1,85 +1,84 @@
 import React from 'react';
-import { Button, message } from 'antd';
-import ProForm, {
-  ModalForm,
-  ProFormText,
-  ProFormDateRangePicker,
-  ProFormSelect,
-} from '@ant-design/pro-form';
+import { queryRoles } from '@/pages/System/role/service';
+import { createUser } from '../service';
+import ProForm, { ModalForm, ProFormText, ProFormSelect } from '@ant-design/pro-form';
+import { message } from 'antd';
 
 const CreateForm = (props) => {
-  const { actionRef,modalVisible, onCancel } = props;
+  const { actionRef, modalVisible, onCancel } = props;
   return (
     <ModalForm
-      title="新建表单"
+      title="新建用户"
       visible={modalVisible}
       onVisibleChange={() => onCancel()}
-      onFinish={async (values) => {
-        console.log(values);
-        message.success('提交成功！');
-        if (actionRef.current) {
-          actionRef.current.reload();
-        }
+      onFinish={(values) => {
+        createUser(values)
+          .then((res) => {
+            if (res.code === 200 && res.status === true) {
+              message.success(res.message);
+              if (actionRef.current) {
+                actionRef.current.reload();
+              }
+            }
+          });
+
         return true;
       }}
     >
       <ProForm.Group>
         <ProFormText
+          name="username"
+          label="用户名"
+          rules={[{ required: true }]}
+        />
+        <ProFormText
           name="name"
-          label="签约客户名称"
-          tooltip="最长为 24 位"
-          placeholder="请输入名称"
+          label="姓名"
+          rules={[{ required: true }]}
         />
-        <ProFormText name="company" label="我方公司名称" placeholder="请输入名称" />
       </ProForm.Group>
       <ProForm.Group>
-        <ProFormText name="contract" label="合同名称" placeholder="请输入名称" />
-        <ProFormDateRangePicker name="contractTime" label="合同生效时间" />
+        <ProFormText
+          name="mobile"
+          label="手机"
+          rules={[
+            {
+              pattern: /^1(?:70\d|(?:9[89]|8[0-24-9]|7[135-8]|66|5[0-35-9])\d|3(?:4[0-8]|[0-35-9]\d))\d{7}$/,
+              message: '请输入正确的手机号码',
+            },
+          ]}
+        />
+        <ProFormText
+          name="email"
+          label="邮箱"
+          rules={[
+            {
+              type: 'email',
+              message: '请输入正确的邮箱地址',
+            },
+          ]}
+        />
       </ProForm.Group>
       <ProForm.Group>
         <ProFormSelect
-          options={[
-            {
-              value: 'chapter',
-              label: '盖章后生效',
-            },
-          ]}
-          width="xs"
-          name="useMode"
-          label="合同约定生效方式"
+          name="roles"
+          label="角色"
+          hasFeedback
+          request={() =>
+            queryRoles().then((res) =>
+              res.data.data.map((item) => ({
+                label: item.name,
+                value: item.id,
+              })),
+            )
+          }
+          mode="multiple"
+          rules={[{ required: true, type: 'array', message: '请选择角色' }]}
         />
-        <ProFormSelect
-          width="xs"
-          options={[
-            {
-              value: 'time',
-              label: '履行完终止',
-            },
-          ]}
-          name="unusedMode"
-          label="合同约定失效效方式"
-        />
+        <ProFormText.Password label="密码" name="password" rules={[{ required: true }]} />
       </ProForm.Group>
-      <ProFormText width="s" name="id" label="主合同编号" />
-      <ProFormText name="project" disabled label="项目名称" initialValue="xxxx项目" />
-      <ProFormText width="xs" name="mangerName" disabled label="商务经理" initialValue="启途" />
     </ModalForm>
   );
 };
-
-// const CreateForm = (props) => {
-//   const { modalVisible, onCancel } = props;
-//   return (
-//     <Modal
-//       destroyOnClose
-//       title="新建规则"
-//       visible={modalVisible}
-//       onCancel={() => onCancel()}
-//       footer={null}
-//     >
-//       {props.children}
-//     </Modal>
-//   );
-// };
 
 export default CreateForm;

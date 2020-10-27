@@ -8,7 +8,7 @@ export async function AccountLogin(params) {
 export async function AccountLogout(params) {
   return request('/api/auth/logout', {
     method: 'POST',
-    //data: params,
+    data: params,
   });
 }
 

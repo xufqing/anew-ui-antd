@@ -26,7 +26,9 @@ const noMatch = (
     }
   />
 );
-const defaultFooterDom = <DefaultFooter links={[]} copyright={`${new Date().getFullYear()} Anew`} />;
+const defaultFooterDom = (
+  <DefaultFooter links={[]} copyright={`${new Date().getFullYear()} Anew`} />
+);
 
 const loopMenuItem = (menus) =>
   menus.map(({ icon, children, ...item }) => ({
@@ -51,8 +53,8 @@ const BasicLayout = (props) => {
     setMenuData([]);
     setLoading(true);
     getMenuTreeData().then((resp) => {
-      setMenuData(resp.data);
-      setLoading(false);
+      resp ? setMenuData(resp.data) : null;
+      resp ? setLoading(false) : null;
     });
   }, []);
   /**

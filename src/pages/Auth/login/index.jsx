@@ -8,7 +8,6 @@ const { Tab, UserName, Password, Submit } = LoginForm;
 
 const Login = (props) => {
   const { userLogin = {}, submitting } = props;
-  const { status, type: loginType } = userLogin;
   const [autoLogin, setAutoLogin] = useState(true);
   const [type, setType] = useState('account');
 
