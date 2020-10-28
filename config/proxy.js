@@ -14,7 +14,7 @@ export default {
         '^': '',
       },
     },
-    // 代理上传的头像
+    // 代理显示上传的头像
     '/upload/': {
       target: 'http://127.0.0.1:8011',
       changeOrigin: true,

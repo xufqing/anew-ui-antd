@@ -42,7 +42,7 @@ class AvatarDropdown extends React.Component {
     );
     const avatarImg = isUrl(currentUser.avatar)
       ? currentUser.avatar
-      : window.location.origin + '/' + currentUser.avatar;
+      : window.location.origin + currentUser.avatar;
     return currentUser && currentUser.name ? (
       <HeaderDropdown overlay={menuHeaderDropdown}>
         <span className={`${styles.action} ${styles.account}`}>

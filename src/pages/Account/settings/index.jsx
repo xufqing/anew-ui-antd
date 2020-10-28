@@ -1,7 +1,7 @@
 import { GridContent } from '@ant-design/pro-layout';
 import { UploadOutlined } from '@ant-design/icons';
-import React, { useEffect } from 'react';
-import { Card, Col, Button, Upload, Row, Tabs } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Card, Col, Button, Upload, Row, Tabs, message } from 'antd';
 import BaseForm from './components/BaseForm';
 import ChangePasswordFrom from './components/ChangePasswordFrom';
 import IconFont from '@/components/IconFont';
@@ -10,6 +10,8 @@ import styles from './settings.less';
 
 const Settings = (props) => {
   const { userInfo = {}, dispatch } = props;
+  const [uploadLoading, setUploadLoading] = useState(false);
+
   useEffect(() => {
     if (dispatch) {
       dispatch({
@@ -22,7 +24,42 @@ const Settings = (props) => {
     list.map(({ name }) => roleList.push(name));
     return roleList && roleList.length > 0 ? roleList.join('、') : '无';
   };
-  
+
+  const beforeUpload = (file) => {
+    const isJpgOrPng =
+      file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/gif';
+    if (!isJpgOrPng) {
+      message.error('只可以上传JPG/PNG/GIF图片!');
+    }
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      message.error('图片必须小于2MB!');
+    }
+    return isJpgOrPng && isLt2M;
+  };
+
+  const handleChange = (info) => {
+    if (info.file.status === 'uploading') {
+      setUploadLoading(true);
+      return;
+    }
+    if (info.file.status === 'done') {
+      console.log(info)
+      message.success('上传成功');
+      let currentUser = JSON.parse(localStorage.getItem('user')) || {};
+      currentUser.avatar = info.file.response.data.url;
+      localStorage.setItem('user', JSON.stringify(currentUser));
+      if (dispatch) {
+        dispatch({
+          type: 'user/getUserInfo',
+        });
+      }
+    }
+  };
+
+  const tokenHeaders = {
+    Authorization: "Bearer " + localStorage.getItem('token'),
+  }
   return (
     <GridContent>
       {userInfo.username && (
@@ -38,7 +75,16 @@ const Settings = (props) => {
               <div>
                 <div className={styles.avatarHolder}>
                   <img alt="" src={userInfo.avatar} />
-                  <Upload showUploadList={false}>
+                  <Upload
+                    name="avatar"
+                    headers={tokenHeaders}
+                    accept=".jpg,.jpeg,.png,.gif"
+                    className="avatar-uploader"
+                    showUploadList={false}
+                    action="/api/v1/user/info/uploadImg"
+                    beforeUpload={beforeUpload}
+                    onChange={handleChange}
+                  >
                     <div className={styles.button_view}>
                       <Button>
                         <UploadOutlined /> 更换头像
@@ -101,7 +147,7 @@ const Settings = (props) => {
           <Col lg={7} md={24}>
             <Card title="个人设置" bordered={false} style={{ width: '730px', height: '480px' }}>
               <Tabs tabPosition="right" onChange={() => {}}>
-                <Tabs.TabPane tab="基本信息" key="baseInfo" >
+                <Tabs.TabPane tab="基本信息" key="baseInfo">
                   <BaseForm values={userInfo} dispatch={dispatch} />
                 </Tabs.TabPane>
                 <Tabs.TabPane tab="修改密码" key="changePwd">
