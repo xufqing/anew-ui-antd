@@ -3,7 +3,7 @@ import { history } from 'umi';
 import { AccountLogin,AccountLogout } from '@/services/login';
 import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
-const Model = {
+const LoginModel = {
   namespace: 'login',
   state: {
     status: undefined,
@@ -72,4 +72,4 @@ const Model = {
     },
   },
 };
-export default Model;
+export default LoginModel;

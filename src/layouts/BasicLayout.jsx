@@ -31,11 +31,13 @@ const defaultFooterDom = (
 );
 
 const loopMenuItem = (menus) =>
-  menus.map(({ icon, children, ...item }) => ({
-    ...item,
-    icon: icon && <IconFont type={icon} />,
-    children: children && loopMenuItem(children),
-  }));
+  Array.isArray(menus)
+    ? menus.map(({ icon, children, ...item }) => ({
+        ...item,
+        icon: icon && <IconFont type={icon} />,
+        children: children && loopMenuItem(children),
+      }))
+    : null;
 
 const BasicLayout = (props) => {
   const [menuData, setMenuData] = useState([]);

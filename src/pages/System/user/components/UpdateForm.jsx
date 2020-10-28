@@ -11,8 +11,8 @@ const UpdateForm = (props) => {
       title="修改用户"
       visible={modalVisible}
       onVisibleChange={() => onCancel()}
-      onFinish={(v) => {
-        updateUser(values.id.toString(), v).then((res) => {
+      onFinish={async (v) => {
+        await updateUser(values.id.toString(), v).then((res) => {
           if (res.code === 200 && res.status === true) {
             message.success(res.message);
             actionRef.current.reload(); //刷新table

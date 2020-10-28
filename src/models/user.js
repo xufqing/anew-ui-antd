@@ -1,28 +1,22 @@
-import { query as queryUsers } from '@/services/user';
+import { queryUserInfo } from '@/services/user';
 const UserModel = {
   namespace: 'user',
   state: {
-    currentUser: {},
+    userInfo: {},
   },
   effects: {
-    *fetch(_, { call, put }) {
-      const response = yield call(queryUsers);
+    *getUserInfo(_, { call, put }) {
+      const response = yield call(queryUserInfo);
       yield put({
-        type: 'save',
-        payload: response,
+        type: 'saveUserInfo',
+        payload: response.data,
       });
     },
-
-    // *fetchCurrent(_, { call, put }) {
-    //   const response = yield call(queryCurrent);
-    //   yield put({
-    //     type: 'saveCurrentUser',
-    //     payload: response,
-    //   });
-    // },
   },
   reducers: {
-
+    saveUserInfo(state, action) {
+      return { ...state, userInfo: action.payload || {} };
+    },
   },
 };
 export default UserModel;

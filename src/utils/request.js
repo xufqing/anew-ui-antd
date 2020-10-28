@@ -83,6 +83,17 @@ request.interceptors.response.use(async (response) => {
   }
   if (data && !data.status) {
     message.error(data.message);
+    if ( data.code === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('expires');
+      localStorage.removeItem('anew-authority');
+      localStorage.removeItem('user');
+      (() => {
+        routerRedux.replace({
+          pathname: '/login',
+        });
+      })();
+    }
   } else {
     if (data.code !== 200) {
       message.error(data.message);

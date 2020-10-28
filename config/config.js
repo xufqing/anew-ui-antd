@@ -54,6 +54,18 @@ export default defineConfig({
               component: './Workplace',
             },
             {
+              path: '/account',
+              name: 'account',
+              routes: [
+                {
+                  path: '/account/settings',
+                  name: 'settings',
+                  component: './Account/settings',
+                  //authority: ['admin'],
+                },
+              ]
+            },
+            {
               path: '/system',
               name: 'system',
               //component: './Dashboard',
