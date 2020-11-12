@@ -19,11 +19,6 @@ const Settings = (props) => {
       });
     }
   }, []);
-  const getRole = (list = []) => {
-    let roleList = [];
-    list.map(({ name }) => roleList.push(name));
-    return roleList && roleList.length > 0 ? roleList.join('、') : '无';
-  };
 
   const beforeUpload = (file) => {
     const isJpgOrPng =
@@ -132,13 +127,14 @@ const Settings = (props) => {
                       <IconFont type="iconrole-list" style={{ fontSize: '16px', marginRight: 8 }} />
                       角色
                     </p>
-                    {getRole(userInfo.roles)}
+                    {userInfo.role.name}
                   </div>
                   <div>
                     <p style={{ marginRight: '29px' }}>
                       <IconFont type="iconbumen" style={{ fontSize: '16px', marginRight: 8 }} />
                       部门
                     </p>
+                    {userInfo.dept.name}
                   </div>
                 </div>
               </div>

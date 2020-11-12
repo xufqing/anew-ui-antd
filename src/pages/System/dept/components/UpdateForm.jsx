@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { queryRoles } from '@/pages/System/role/service';
-import { updateUser } from '../service';
 import { queryDepts } from '@/pages/System/dept/service';
-import ProForm, { ModalForm, ProFormText, ProFormSelect } from '@ant-design/pro-form';
+import { updateDept } from '../service';
+import ProForm, { ModalForm, ProFormText, ProFormSelect, ProFormDigit } from '@ant-design/pro-form';
 import { message, TreeSelect, Form } from 'antd';
 
 // 处理返回的树数据
@@ -29,11 +28,11 @@ const UpdateForm = (props) => {
 
   return (
     <ModalForm
-      title="修改用户"
+      title="修改部门"
       visible={modalVisible}
       onVisibleChange={() => onCancel()}
       onFinish={async (v) => {
-        updateUser(values.id.toString(), v).then((res) => {
+        await updateDept(values.id.toString(), v).then((res) => {
           if (res.code === 200 && res.status === true) {
             message.success(res.message);
             actionRef.current.reload(); //刷新table
@@ -45,7 +44,7 @@ const UpdateForm = (props) => {
       <ProForm.Group>
         <ProFormText
           name="name"
-          label="姓名"
+          label="名称"
           initialValue={values.name}
           rules={[{ required: true }]}
         />
@@ -68,46 +67,8 @@ const UpdateForm = (props) => {
         />
       </ProForm.Group>
       <ProForm.Group>
-        <ProFormText
-          name="mobile"
-          label="手机"
-          initialValue={values.mobile}
-          rules={[
-            {
-              pattern: /^1(?:70\d|(?:9[89]|8[0-24-9]|7[135-8]|66|5[0-35-9])\d|3(?:4[0-8]|[0-35-9]\d))\d{7}$/,
-              message: '请输入正确的手机号码',
-            },
-          ]}
-        />
-        <ProFormText
-          name="email"
-          label="邮箱"
-          initialValue={values.email}
-          rules={[
-            {
-              type: 'email',
-              message: '请输入正确的邮箱地址',
-            },
-          ]}
-        />
-      </ProForm.Group>
-      <ProForm.Group>
-        <ProFormSelect
-          name="role_id"
-          label="角色"
-          hasFeedback
-          initialValue={values.role_id}
-          request={() =>
-            queryRoles().then((res) =>
-              res.data.data.map((item) => ({
-                label: item.name,
-                value: item.id,
-              })),
-            )
-          }
-          rules={[{ required: true, message: '请选择角色' }]}
-        />
-        <Form.Item label="部门" name="dept_id" initialValue={values.dept_id}>
+        <ProFormDigit name="sort" label="排序" initialValue={values.sort} fieldProps={{ precision: 0 }}/>
+        <Form.Item label="上级部门" name="parent_id" initialValue={values.parent_id}>
           <TreeSelect
             style={{ width: 330 }}
             dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
@@ -115,7 +76,6 @@ const UpdateForm = (props) => {
             placeholder="请选择部门"
           />
         </Form.Item>
-        <ProFormText.Password label="重置密码" name="password" placeholder="输入则修改密码" />
       </ProForm.Group>
     </ModalForm>
   );

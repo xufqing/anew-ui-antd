@@ -4,7 +4,8 @@
  */
 import { extend } from 'umi-request';
 import { message } from 'antd';
-import { notification } from 'antd';
+import { history } from 'umi';
+
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
   201: '新建或修改数据成功。',
@@ -32,15 +33,10 @@ const errorHandler = (error) => {
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
     const { status, url } = response;
-    notification.error({
-      message: `请求错误 ${status}: ${url}`,
-      description: errorText,
-    });
+    message.error(`请求错误 ${status}: ${url}`)
+    message.error(errorText)
   } else if (!response) {
-    notification.error({
-      description: '您的网络发生异常，无法连接服务器',
-      message: '网络异常',
-    });
+    message.error("您的网络发生异常，无法连接服务器")
   }
 
   return response;
@@ -88,11 +84,8 @@ request.interceptors.response.use(async (response) => {
       localStorage.removeItem('expires');
       localStorage.removeItem('anew-authority');
       localStorage.removeItem('user');
-      (() => {
-        routerRedux.replace({
-          pathname: '/login',
-        });
-      })();
+      message.error('未登录或登录已过期，请重新登录。');
+      history.push('/user/login')
     }
   } else {
     if (data.code !== 200) {

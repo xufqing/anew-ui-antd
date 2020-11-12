@@ -18,8 +18,8 @@ const UserList = () => {
 
   const handleDelete = (record) => {
     if (!record) return;
-    if (Array.isArray(record) && !record.length) return;
-    const content = `您是否要删除这${Array.isArray(record) ? record.length : ''}项？`;
+    if (Array.isArray(record.ids) && !record.ids.length) return;
+    const content = `您是否要删除这${Array.isArray(record.ids) ? record.ids.length : ''}项？`;
     Modal.confirm({
       title: '注意',
       content,
@@ -57,12 +57,21 @@ const UserList = () => {
     },
     {
       title: '角色',
-      dataIndex: 'roles',
+      dataIndex: 'role',
       search: false,
       render: (_, record) => {
-        let roleList = [];
-        record.roles.map(({ name }) => roleList.push(name));
-        return roleList && roleList.length > 0 ? roleList.join('、') : '无';
+        // let roleList = [];
+        // record.roles.map(({ name }) => roleList.push(name));
+        // return roleList && roleList.length > 0 ? roleList.join('、') : '无';
+        return record.role.name;
+      },
+    },
+    {
+      title: '部门',
+      dataIndex: 'dept',
+      search: false,
+      render: (_, record) => {
+        return record.dept.name;
       },
     },
     {
@@ -143,7 +152,7 @@ const UserList = () => {
             项&nbsp;&nbsp;
           </div>
         )}
-        request={(params, filter) => queryUsers({ ...params, filter }).then((res) => res.data)}
+        request={(params) => queryUsers({ ...params }).then((res) => res.data)}
         columns={columns}
         rowSelection={{}}
       />

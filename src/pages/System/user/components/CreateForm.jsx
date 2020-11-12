@@ -1,41 +1,52 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { queryRoles } from '@/pages/System/role/service';
+import { queryDepts } from '@/pages/System/dept/service';
 import { createUser } from '../service';
 import ProForm, { ModalForm, ProFormText, ProFormSelect } from '@ant-design/pro-form';
-import { message } from 'antd';
+import { message, TreeSelect, Form } from 'antd';
+
+// 处理返回的树数据
+const loopTreeItem = (tree) =>
+  Array.isArray(tree)
+    ? tree.map(({ id, name, children, ...item }) => ({
+        ...item,
+        title: name,
+        value: id,
+        children: children && loopTreeItem(children),
+      }))
+    : null;
 
 const CreateForm = (props) => {
   const { actionRef, modalVisible, onCancel } = props;
+  const [treeData, setTreeData] = useState([]);
+
+  useEffect(() => {
+    queryDepts({ all: true }).then((res) => {
+      const depts = loopTreeItem(res.data)
+      setTreeData([{ label: '暂无所属', value: 0 }].concat(depts));
+    });
+  }, [1]);
+
   return (
     <ModalForm
       title="新建用户"
       visible={modalVisible}
       onVisibleChange={() => onCancel()}
       onFinish={(values) => {
-        createUser(values)
-          .then((res) => {
-            if (res.code === 200 && res.status === true) {
-              message.success(res.message);
-              if (actionRef.current) {
-                actionRef.current.reload();
-              }
+        createUser(values).then((res) => {
+          if (res.code === 200 && res.status === true) {
+            message.success(res.message);
+            if (actionRef.current) {
+              actionRef.current.reload();
             }
-          });
-
+          }
+        });
         return true;
       }}
     >
       <ProForm.Group>
-        <ProFormText
-          name="username"
-          label="用户名"
-          rules={[{ required: true }]}
-        />
-        <ProFormText
-          name="name"
-          label="姓名"
-          rules={[{ required: true }]}
-        />
+        <ProFormText name="username" label="用户名" rules={[{ required: true }]} />
+        <ProFormText name="name" label="姓名" rules={[{ required: true }]} />
       </ProForm.Group>
       <ProForm.Group>
         <ProFormText
@@ -61,7 +72,7 @@ const CreateForm = (props) => {
       </ProForm.Group>
       <ProForm.Group>
         <ProFormSelect
-          name="roles"
+          name="role_id"
           label="角色"
           hasFeedback
           request={() =>
@@ -72,9 +83,16 @@ const CreateForm = (props) => {
               })),
             )
           }
-          mode="multiple"
-          rules={[{ required: true, type: 'array', message: '请选择角色' }]}
+          rules={[{ required: true, message: '请选择角色' }]}
         />
+        <Form.Item label="部门" name="dept_id" >
+          <TreeSelect
+            style={{ width: 330 }}
+            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+            treeData={treeData}
+            placeholder="请选择部门"
+          />
+        </Form.Item>
         <ProFormText.Password label="密码" name="password" rules={[{ required: true }]} />
       </ProForm.Group>
     </ModalForm>

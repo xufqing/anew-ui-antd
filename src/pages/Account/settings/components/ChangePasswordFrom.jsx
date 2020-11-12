@@ -25,7 +25,7 @@ const BaseForm = (props) => {
   };
   // 确认密码
   const handleCheckRePwd = (rule, value, callback) => {
-    let password = form.getFieldValue('newPassword');
+    let password = form.getFieldValue('new_password');
     if (password) {
       if (password !== value) {
         return Promise.reject('两次输入的密码不一致');
@@ -38,7 +38,7 @@ const BaseForm = (props) => {
     <ProForm
       form={form}
       onFinish={async (v) => {
-        await changePassword({ oldPassword: v.oldPassword, newPassword: v.newPassword }).then(
+        await changePassword({ old_password: v.old_password, new_password: v.new_password }).then(
           (res) => {
             if (res.code === 200 && res.status === true) {
               message.success(res.message);
@@ -48,15 +48,15 @@ const BaseForm = (props) => {
       }}
     >
       <ProForm.Group>
-        <ProFormText.Password label="旧密码" name="oldPassword" rules={[{ required: true }]} />
+        <ProFormText.Password label="旧密码" name="old_password" rules={[{ required: true }]} />
         <ProFormText.Password
           label="新密码"
-          name="newPassword"
+          name="new_password"
           rules={[{ required: true, validator: validateToNextPassword }]}
         />
         <ProFormText.Password
           label="确认密码"
-          name="newPassword2"
+          name="new_password2"
           rules={[{ required: true, validator: handleCheckRePwd }]}
         />
       </ProForm.Group>
