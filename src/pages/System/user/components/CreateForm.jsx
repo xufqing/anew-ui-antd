@@ -22,7 +22,7 @@ const CreateForm = (props) => {
 
   useEffect(() => {
     queryDepts({ all: true }).then((res) => {
-      const depts = loopTreeItem(res.data)
+      const depts = loopTreeItem(res.data);
       setTreeData([{ label: '暂无所属', value: 0 }].concat(depts));
     });
   }, [1]);
@@ -31,17 +31,20 @@ const CreateForm = (props) => {
     <ModalForm
       title="新建用户"
       visible={modalVisible}
-      onVisibleChange={() => onCancel()}
+      onVisibleChange={onCancel}
       onFinish={(values) => {
-        createUser(values).then((res) => {
-          if (res.code === 200 && res.status === true) {
-            message.success(res.message);
-            if (actionRef.current) {
-              actionRef.current.reload();
+        createUser(values)
+          .then((res) => {
+            if (res.code === 200 && res.status === true) {
+              message.success(res.message);
+              if (actionRef.current) {
+                actionRef.current.reload();
+              }
             }
-          }
-        });
-        return true;
+          })
+          .then(() => {
+            onCancel();
+          });
       }}
     >
       <ProForm.Group>
@@ -85,7 +88,7 @@ const CreateForm = (props) => {
           }
           rules={[{ required: true, message: '请选择角色' }]}
         />
-        <Form.Item label="部门" name="dept_id" >
+        <Form.Item label="部门" name="dept_id">
           <TreeSelect
             style={{ width: 330 }}
             dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}

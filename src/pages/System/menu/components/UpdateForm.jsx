@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { queryDepts } from '@/pages/System/dept/service';
-import { updateDept } from '../service';
+import { queryMenus } from '@/pages/System/menu/service';
+import { updateMenu } from '../service';
 import ProForm, { ModalForm, ProFormText, ProFormSelect, ProFormDigit } from '@ant-design/pro-form';
 import { message, TreeSelect, Form } from 'antd';
 
@@ -20,19 +20,19 @@ const UpdateForm = (props) => {
   const [treeData, setTreeData] = useState([]);
 
   useEffect(() => {
-    queryDepts({ all: true }).then((res) => {
+    queryMenus({ all: true }).then((res) => {
       const depts = loopTreeItem(res.data);
-      setTreeData([{ label: '暂无所属', value: 0 }].concat(depts));
+      setTreeData([{ label: '顶级菜单', value: 0 }].concat(depts));
     });
   }, []);
 
   return (
     <ModalForm
-      title="修改部门"
+      title="修改菜单"
       visible={modalVisible}
       onVisibleChange={onCancel}
       onFinish={(v) => {
-        updateDept(values.id.toString(), v)
+        updateMenu(values.id.toString(), v)
           .then((res) => {
             if (res.code === 200 && res.status === true) {
               message.success(res.message);
@@ -51,6 +51,18 @@ const UpdateForm = (props) => {
           initialValue={values.name}
           rules={[{ required: true }]}
         />
+        <ProFormText name="icon" label="图标" initialValue={values.icon} />
+      </ProForm.Group>
+      <ProForm.Group>
+        <ProFormText name="path" label="路径" initialValue={values.path} />
+        <ProFormDigit
+          name="sort"
+          label="排序"
+          initialValue={values.sort}
+          fieldProps={{ precision: 0 }}
+        />
+      </ProForm.Group>
+      <ProForm.Group>
         <ProFormSelect
           name="status"
           label="状态"
@@ -68,20 +80,12 @@ const UpdateForm = (props) => {
           ]}
           rules={[{ required: true, message: '请选择状态' }]}
         />
-      </ProForm.Group>
-      <ProForm.Group>
-        <ProFormDigit
-          name="sort"
-          label="排序"
-          initialValue={values.sort}
-          fieldProps={{ precision: 0 }}
-        />
-        <Form.Item label="上级部门" name="parent_id" initialValue={values.parent_id}>
+        <Form.Item label="上级菜单" name="parent_id" initialValue={values.parent_id}>
           <TreeSelect
             style={{ width: 330 }}
             dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
             treeData={treeData}
-            placeholder="请选择部门"
+            placeholder="请选择菜单"
           />
         </Form.Item>
       </ProForm.Group>

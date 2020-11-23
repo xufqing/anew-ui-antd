@@ -25,21 +25,22 @@ const UpdateForm = (props) => {
       const depts = loopTreeItem(res.data)
       setTreeData([{ label: '暂无所属', value: 0 }].concat(depts));
     });
-  }, [1]);
+  }, []);
 
   return (
     <ModalForm
       title="修改用户"
       visible={modalVisible}
-      onVisibleChange={() => onCancel()}
-      onFinish={async (v) => {
+      onVisibleChange={onCancel}
+      onFinish={(v) => {
         updateUser(values.id.toString(), v).then((res) => {
           if (res.code === 200 && res.status === true) {
             message.success(res.message);
             actionRef.current.reload(); //刷新table
           }
-        });
-        return true;
+        }).then(()=>{
+          onCancel();
+        })
       }}
     >
       <ProForm.Group>

@@ -7,13 +7,10 @@ import CreateForm from './components/CreateForm';
 import UpdateForm from './components/UpdateForm';
 import { queryDepts, deleteDept } from './service';
 
-const UserList = () => {
-  const initFormState = {
-    roles: [],
-  };
+const DeptList = () => {
   const [createModalVisible, handleModalVisible] = useState(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState(false);
-  const [formValues, setFormValues] = useState(initFormState);
+  const [formValues, setFormValues] = useState({});
   const actionRef = useRef();
 
   const handleDelete = (record) => {
@@ -141,7 +138,6 @@ const UserList = () => {
         <UpdateForm
           actionRef={actionRef}
           onCancel={() => {
-            setFormValues(initFormState);
             handleUpdateModalVisible(false);
           }}
           modalVisible={updateModalVisible}
@@ -152,4 +148,4 @@ const UserList = () => {
   );
 };
 
-export default UserList;
+export default DeptList;
