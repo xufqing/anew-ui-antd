@@ -101,6 +101,12 @@ export default defineConfig({
                   component: './System/api',
                   //authority: ['admin'],
                 },
+                {
+                  path: '/system/operlog',
+                  name: 'operlog',
+                  component: './System/operlog',
+                  //authority: ['admin'],
+                },
               ],
             },
             {
