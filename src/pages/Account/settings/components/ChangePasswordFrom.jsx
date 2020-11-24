@@ -48,7 +48,7 @@ const BaseForm = (props) => {
       }}
     >
       <ProForm.Group>
-        <ProFormText.Password label="旧密码" name="old_password" rules={[{ required: true }]} />
+        <ProFormText.Password label="当前密码" name="old_password" rules={[{ required: true }]} />
         <ProFormText.Password
           label="新密码"
           name="new_password"

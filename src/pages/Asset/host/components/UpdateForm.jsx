@@ -1,6 +1,5 @@
-import React from 'react';
-import { updateApi } from '../service';
-import ProForm, { ModalForm, ProFormText } from '@ant-design/pro-form';
+import { updateRole } from '../service';
+import ProForm, { ModalForm, ProFormText, ProFormSelect } from '@ant-design/pro-form';
 import { message } from 'antd';
 
 const UpdateForm = (props) => {
@@ -8,11 +7,11 @@ const UpdateForm = (props) => {
 
   return (
     <ModalForm
-      title="修改接口"
+      title="修改角色"
       visible={modalVisible}
       onVisibleChange={onCancel}
       onFinish={(v) => {
-        updateApi(values.id.toString(), v)
+        updateRole(values.id.toString(), v)
           .then((res) => {
             if (res.code === 200 && res.status === true) {
               message.success(res.message);
@@ -20,40 +19,39 @@ const UpdateForm = (props) => {
             }
           })
           .then(() => {
-            onCancel();
+            onCancel(); //关闭弹窗
           });
+        //return true;
       }}
     >
       <ProForm.Group>
         <ProFormText
           name="name"
           label="名称"
-          rules={[{ required: true }]}
           initialValue={values.name}
-        />
-        <ProFormText
-          name="method"
-          label="请求方式"
           rules={[{ required: true }]}
-          initialValue={values.method}
         />
-      </ProForm.Group>
-      <ProForm.Group>
-        <ProFormText
-          name="category"
-          label="分类"
-          rules={[{ required: true }]}
-          initialValue={values.category}
-        />
-        <ProFormText
-          name="path"
-          label="路径"
-          rules={[{ required: true }]}
-          initialValue={values.path}
-        />
+        <ProFormText name="keyword" label="关键字" initialValue={values.keyword} />
       </ProForm.Group>
       <ProForm.Group>
         <ProFormText name="desc" label="说明" initialValue={values.desc} />
+        <ProFormSelect
+          name="status"
+          label="状态"
+          hasFeedback
+          initialValue={values.status}
+          options={[
+            {
+              value: true,
+              label: '激活',
+            },
+            {
+              value: false,
+              label: '禁用',
+            },
+          ]}
+          rules={[{ required: true, message: '请选择状态' }]}
+        />
       </ProForm.Group>
     </ModalForm>
   );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { createApi } from '../service';
+import { createRole } from '../service';
 import ProForm, { ModalForm, ProFormText } from '@ant-design/pro-form';
 import { message } from 'antd';
 
@@ -8,11 +8,11 @@ const CreateForm = (props) => {
 
   return (
     <ModalForm
-      title="新建接口"
+      title="新建角色"
       visible={modalVisible}
       onVisibleChange={onCancel}
       onFinish={(values) => {
-        createApi(values)
+        createRole(values)
           .then((res) => {
             if (res.code === 200 && res.status === true) {
               message.success(res.message);
@@ -28,11 +28,7 @@ const CreateForm = (props) => {
     >
       <ProForm.Group>
         <ProFormText name="name" label="名称" rules={[{ required: true }]} />
-        <ProFormText name="method" label="请求方式" rules={[{ required: true }]} />
-      </ProForm.Group>
-      <ProForm.Group>
-        <ProFormText name="category" label="分类" rules={[{ required: true }]} />
-        <ProFormText name="path" label="路径" rules={[{ required: true }]} />
+        <ProFormText name="keyword" label="关键字" />
       </ProForm.Group>
       <ProForm.Group>
         <ProFormText name="desc" label="说明" />

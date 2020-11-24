@@ -1,22 +1,15 @@
-import {
-  DeleteOutlined,
-  PlusOutlined,
-  FormOutlined,
-  SafetyCertificateOutlined,
-} from '@ant-design/icons';
+import { DeleteOutlined, PlusOutlined, FormOutlined } from '@ant-design/icons';
 import { Button, Tooltip, Divider, Modal, message } from 'antd';
 import React, { useState, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import CreateForm from './components/CreateForm';
 import UpdateForm from './components/UpdateForm';
-import PermsForm from './components/PermsForm';
-import { queryRoles, deleteRole } from './service';
+import { queryDicts, deleteDict } from './service';
 
-const RoleList = () => {
+const DictList = () => {
   const [createModalVisible, handleModalVisible] = useState(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState(false);
-  const [permsModalVisible, handlePermsModalVisible] = useState(false);
   const [formValues, setFormValues] = useState({});
   const actionRef = useRef();
 
@@ -28,7 +21,7 @@ const RoleList = () => {
       title: '注意',
       content,
       onOk: () => {
-        deleteRole(record).then((res) => {
+        deleteDict(record).then((res) => {
           if (res.code === 200 && res.status === true) {
             message.success(res.message);
             if (actionRef.current) {
@@ -43,16 +36,17 @@ const RoleList = () => {
 
   const columns = [
     {
-      title: '名称',
-      dataIndex: 'name',
+      title: 'Key',
+      dataIndex: 'key',
     },
     {
-      title: '关键字',
-      dataIndex: 'keyword',
+      title: 'Value',
+      dataIndex: 'value',
     },
     {
-      title: '说明',
+      title: '详情',
       dataIndex: 'desc',
+      search: false,
     },
     {
       title: '创建人',
@@ -78,21 +72,6 @@ const RoleList = () => {
       valueType: 'option',
       render: (_, record) => (
         <>
-          <Tooltip title="设置权限">
-            <SafetyCertificateOutlined
-              style={{ fontSize: '17px', color: 'blue' }}
-              onClick={() => {
-                if (record.keyword != 'admin') {
-                  setFormValues(record);
-                  handlePermsModalVisible(true);
-                } else {
-                  message.info("管理员拥有所有权限");
-                }
-              }}
-            />
-          </Tooltip>
-
-          <Divider type="vertical" />
           <Tooltip title="修改">
             <FormOutlined
               style={{ fontSize: '17px', color: '#52c41a' }}
@@ -117,6 +96,7 @@ const RoleList = () => {
   return (
     <PageHeaderWrapper>
       <ProTable
+        pagination={false}
         actionRef={actionRef}
         rowKey="id"
         toolBarRender={(action, { selectedRows }) => [
@@ -147,7 +127,7 @@ const RoleList = () => {
             项&nbsp;&nbsp;
           </div>
         )}
-        request={(params) => queryRoles({ ...params }).then((res) => res.data)}
+        request={(params) => queryDicts({ ...params })}
         columns={columns}
         rowSelection={{}}
       />
@@ -156,16 +136,6 @@ const RoleList = () => {
           actionRef={actionRef}
           onCancel={() => handleModalVisible(false)}
           modalVisible={createModalVisible}
-        />
-      )}
-      {permsModalVisible && (
-        <PermsForm
-          actionRef={actionRef}
-          onCancel={() => {
-            handlePermsModalVisible(false);
-          }}
-          modalVisible={permsModalVisible}
-          values={formValues}
         />
       )}
       {updateModalVisible && (
@@ -182,4 +152,4 @@ const RoleList = () => {
   );
 };
 
-export default RoleList;
+export default DictList;

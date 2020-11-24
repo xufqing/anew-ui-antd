@@ -99,6 +99,10 @@ const OperlogList = () => {
       }
     },
     {
+      title: '创建日期',
+      dataIndex: 'created_at',
+    },
+    {
       title: 'UA',
       dataIndex: 'user_agent',
       render: (_, row) => {
@@ -119,36 +123,20 @@ const OperlogList = () => {
       },
     },
     {
-      title: '请求体',
-      dataIndex: 'body',
+      title: '详情',
+      //dataIndex: 'body',
       render: (_, row) => {
         function info() {
           Modal.info({
-            title: 'body',
+            title: '详情',
             content: (
               <div>
+                <h3>Request Data</h3>
                 <p>{row.body}</p>
-              </div>
-            ),
-            onOk() {},
-          });
-        }
-        return (
-        <Button tooltip="预览" onClick={info} shape="circle" icon={<SearchOutlined />} />
-        );
-      },
-    },
-    {
-      title: '响应体',
-      dataIndex: 'data',
-      render: (_, row) => {
-        function info() {
-          Modal.info({
-            title: 'data',
-            content: (
-              <div>
+                <h3>Response Data</h3>
                 <p>{row.data}</p>
               </div>
+              
             ),
             onOk() {},
           });
@@ -158,6 +146,26 @@ const OperlogList = () => {
         );
       },
     },
+    // {
+    //   title: '响应体',
+    //   dataIndex: 'data',
+    //   render: (_, row) => {
+    //     function info() {
+    //       Modal.info({
+    //         title: 'data',
+    //         content: (
+    //           <div>
+    //             <p>{row.data}</p>
+    //           </div>
+    //         ),
+    //         onOk() {},
+    //       });
+    //     }
+    //     return (
+    //     <Button tooltip="预览" onClick={info} shape="circle" icon={<SearchOutlined />} />
+    //     );
+    //   },
+    // },
 
     {
       title: '操作',

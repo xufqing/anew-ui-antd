@@ -1,9 +1,4 @@
-import {
-  DeleteOutlined,
-  PlusOutlined,
-  FormOutlined,
-  SafetyCertificateOutlined,
-} from '@ant-design/icons';
+import { DeleteOutlined, PlusOutlined, FormOutlined, SafetyCertificateOutlined} from '@ant-design/icons';
 import { Button, Tooltip, Divider, Modal, message } from 'antd';
 import React, { useState, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
@@ -78,20 +73,15 @@ const RoleList = () => {
       valueType: 'option',
       render: (_, record) => (
         <>
-          <Tooltip title="设置权限">
+        <Tooltip title="设置权限">
             <SafetyCertificateOutlined
               style={{ fontSize: '17px', color: 'blue' }}
               onClick={() => {
-                if (record.keyword != 'admin') {
-                  setFormValues(record);
-                  handlePermsModalVisible(true);
-                } else {
-                  message.info("管理员拥有所有权限");
-                }
+                setFormValues(record);
+                handlePermsModalVisible(true);
               }}
             />
           </Tooltip>
-
           <Divider type="vertical" />
           <Tooltip title="修改">
             <FormOutlined

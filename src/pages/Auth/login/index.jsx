@@ -24,8 +24,8 @@ const Login = (props) => {
       <LoginForm activeKey={type} onTabChange={setType} onSubmit={handleSubmit}>
         <Tab key="account" tab="普通登录">
           <UserName
-            name="userName"
-            placeholder="用户名: admin or user"
+            name="username"
+            placeholder="用户名: admin or guest"
             rules={[
               {
                 required: true,
@@ -35,7 +35,7 @@ const Login = (props) => {
           />
           <Password
             name="password"
-            placeholder="密码: ant.design"
+            placeholder="密码: 123456"
             rules={[
               {
                 required: true,
@@ -47,7 +47,7 @@ const Login = (props) => {
         <Tab key="ldap" tab="LDAP登录">
           <UserName
             name="userName"
-            placeholder="用户名: admin or user"
+            placeholder="用户名: admin or guest"
             rules={[
               {
                 required: true,
@@ -57,7 +57,7 @@ const Login = (props) => {
           />
           <Password
             name="password"
-            placeholder="密码: ant.design"
+            placeholder="密码: 123456"
             rules={[
               {
                 required: true,

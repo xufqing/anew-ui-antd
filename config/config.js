@@ -66,6 +66,20 @@ export default defineConfig({
               ]
             },
             {
+              path: '/asset',
+              name: 'asset',
+              //component: './Dashboard',
+              //authority: ['admin'],
+              routes: [
+                {
+                  path: '/asset/host',
+                  name: 'host',
+                  component: './Asset/host',
+                  //authority: ['admin'],
+                },
+              ],
+            },
+            {
               path: '/system',
               name: 'system',
               //component: './Dashboard',
@@ -102,10 +116,16 @@ export default defineConfig({
                   //authority: ['admin'],
                 },
                 {
+                  path: '/system/dict',
+                  name: 'dict',
+                  component: './System/dict',
+                  //authority: ['admin'],
+                },
+                {
                   path: '/system/operlog',
                   name: 'operlog',
                   component: './System/operlog',
-                  //authority: ['admin'],
+                  authority: ['admin'],
                 },
               ],
             },
