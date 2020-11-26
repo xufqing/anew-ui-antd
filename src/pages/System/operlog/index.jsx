@@ -58,6 +58,7 @@ const OperlogList = () => {
     {
       title: '响应码',
       dataIndex: 'status',
+      search: false,
       render: (_, row) => {
         let statusColor = 'red'
         if (row.status === 200 ) {
@@ -73,6 +74,7 @@ const OperlogList = () => {
     {
       title: '用户名',
       dataIndex: 'username',
+      search: false,
     },
     {
       title: 'IP地址',
@@ -81,10 +83,12 @@ const OperlogList = () => {
     {
       title: '所在地',
       dataIndex: 'ip_location',
+      search: false,
     },
     {
       title: '耗时',
       dataIndex: 'latency',
+      search: false,
       render: (_, row) => {
         const ms = (row.latency / 1000000).toFixed(2)
         let msColor = 'green'
@@ -101,10 +105,12 @@ const OperlogList = () => {
     {
       title: '创建日期',
       dataIndex: 'created_at',
+      search: false,
     },
     {
       title: 'UA',
       dataIndex: 'user_agent',
+      search: false,
       render: (_, row) => {
         function info() {
           Modal.info({
@@ -125,6 +131,7 @@ const OperlogList = () => {
     {
       title: '详情',
       //dataIndex: 'body',
+      search: false,
       render: (_, row) => {
         function info() {
           Modal.info({
@@ -188,7 +195,6 @@ const OperlogList = () => {
     <PageHeaderWrapper>
       <ProTable
         actionRef={actionRef}
-        search={false}
         rowKey="id"
         toolBarRender={(action, { selectedRows }) => [
           selectedRows && selectedRows.length > 0 && (
