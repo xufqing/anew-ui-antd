@@ -48,13 +48,14 @@ const CreateForm = (props) => {
       }}
     >
       <ProForm.Group>
-        <ProFormText name="username" label="用户名" rules={[{ required: true }]} />
-        <ProFormText name="name" label="姓名" rules={[{ required: true }]} />
+        <ProFormText name="username" label="用户名" width="m" rules={[{ required: true }]} />
+        <ProFormText name="name" label="姓名" width="m" rules={[{ required: true }]} />
       </ProForm.Group>
       <ProForm.Group>
         <ProFormText
           name="mobile"
           label="手机"
+          width="m"
           rules={[
             {
               pattern: /^1(?:70\d|(?:9[89]|8[0-24-9]|7[135-8]|66|5[0-35-9])\d|3(?:4[0-8]|[0-35-9]\d))\d{7}$/,
@@ -65,6 +66,7 @@ const CreateForm = (props) => {
         <ProFormText
           name="email"
           label="邮箱"
+          width="m"
           rules={[
             {
               type: 'email',
@@ -77,6 +79,7 @@ const CreateForm = (props) => {
         <ProFormSelect
           name="role_id"
           label="角色"
+          width="m"
           hasFeedback
           request={() =>
             queryRoles().then((res) =>
@@ -88,7 +91,7 @@ const CreateForm = (props) => {
           }
           rules={[{ required: true, message: '请选择角色' }]}
         />
-        <Form.Item label="部门" name="dept_id">
+        <Form.Item label="部门" name="dept_id" width="m">
           <TreeSelect
             style={{ width: 330 }}
             dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
@@ -96,7 +99,7 @@ const CreateForm = (props) => {
             placeholder="请选择部门"
           />
         </Form.Item>
-        <ProFormText.Password label="密码" name="password" rules={[{ required: true }]} />
+        <ProFormText.Password label="密码" name="password" width="m" rules={[{ required: true }]} />
       </ProForm.Group>
     </ModalForm>
   );

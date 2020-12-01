@@ -48,12 +48,14 @@ const UpdateForm = (props) => {
         <ProFormText
           name="name"
           label="名称"
+          width="m"
           initialValue={values.name}
           rules={[{ required: true }]}
         />
         <ProFormSelect
           name="status"
           label="状态"
+          width="m"
           hasFeedback
           initialValue={values.status}
           options={[
@@ -73,10 +75,11 @@ const UpdateForm = (props) => {
         <ProFormDigit
           name="sort"
           label="排序"
+          width="m"
           initialValue={values.sort}
           fieldProps={{ precision: 0 }}
         />
-        <Form.Item label="上级部门" name="parent_id" initialValue={values.parent_id}>
+        <Form.Item label="上级部门" name="parent_id" initialValue={values.parent_id} width="m">
           <TreeSelect
             style={{ width: 330 }}
             dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}

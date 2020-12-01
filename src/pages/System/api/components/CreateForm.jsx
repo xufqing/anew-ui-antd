@@ -27,15 +27,15 @@ const CreateForm = (props) => {
       }}
     >
       <ProForm.Group>
-        <ProFormText name="name" label="名称" rules={[{ required: true }]} />
-        <ProFormText name="method" label="请求方式" rules={[{ required: true }]} />
+        <ProFormText name="name" label="名称" width="m" rules={[{ required: true }]} />
+        <ProFormText name="method" label="请求方式" width="m" rules={[{ required: true }]} />
       </ProForm.Group>
       <ProForm.Group>
-        <ProFormText name="category" label="分类" rules={[{ required: true }]} />
-        <ProFormText name="path" label="路径" rules={[{ required: true }]} />
+        <ProFormText name="category" label="分类" width="m" rules={[{ required: true }]} />
+        <ProFormText name="path" label="路径" width="m" rules={[{ required: true }]} />
       </ProForm.Group>
       <ProForm.Group>
-        <ProFormText name="desc" label="说明" />
+        <ProFormText name="desc" label="说明" width="m" />
       </ProForm.Group>
     </ModalForm>
   );

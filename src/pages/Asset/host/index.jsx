@@ -1,18 +1,24 @@
-import { DeleteOutlined, PlusOutlined, FormOutlined, SafetyCertificateOutlined} from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  PlusOutlined,
+  FormOutlined,
+  SafetyCertificateOutlined,
+} from '@ant-design/icons';
 import { Button, Tooltip, Divider, Modal, message } from 'antd';
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import CreateForm from './components/CreateForm';
 import UpdateForm from './components/UpdateForm';
-import PermsForm from './components/PermsForm';
-import { queryRoles, deleteRole } from './service';
+import { queryHosts, deleteHost } from './service';
+import { queryDicts } from '@/pages/System/dict/service';
 
-const RoleList = () => {
+const HostList = () => {
   const [createModalVisible, handleModalVisible] = useState(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState(false);
-  const [permsModalVisible, handlePermsModalVisible] = useState(false);
   const [formValues, setFormValues] = useState({});
+  const [hostsType, setHostsType] = useState([]);
+  const [authsType, setAuthsType] = useState([]);
   const actionRef = useRef();
 
   const handleDelete = (record) => {
@@ -23,7 +29,7 @@ const RoleList = () => {
       title: '注意',
       content,
       onOk: () => {
-        deleteRole(record).then((res) => {
+        deleteHost(record).then((res) => {
           if (res.code === 200 && res.status === true) {
             message.success(res.message);
             if (actionRef.current) {
@@ -35,37 +41,64 @@ const RoleList = () => {
       onCancel() {},
     });
   };
+  useEffect(() => {
+    queryDicts({ type_key: 'host_type' }).then((res) => {
+      if (Array.isArray(res.data)) {
+        setHostsType(
+          res.data.map((item) => ({
+            label: item.value,
+            value: item.key,
+          })),
+        );
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    queryDicts({ type_key: 'auth_type' }).then((res) => {
+      if (Array.isArray(res.data)) {
+        setAuthsType(
+          res.data.map((item) => ({
+            label: item.value,
+            value: item.key,
+          })),
+        );
+      }
+    });
+  }, []);
 
   const columns = [
     {
-      title: '名称',
-      dataIndex: 'name',
+      title: '主机名',
+      dataIndex: 'host_name',
     },
     {
-      title: '关键字',
-      dataIndex: 'keyword',
+      title: '地址',
+      dataIndex: 'ip_address',
     },
     {
-      title: '说明',
-      dataIndex: 'desc',
+      title: '端口',
+      dataIndex: 'prot',
+    },
+    {
+      title: '主机类型',
+      dataIndex: 'host_type',
+      valueType: 'select',
+      fieldProps: {
+        options: hostsType,
+      },
+    },
+    {
+      title: '认证类型',
+      dataIndex: 'auth_type',
+      valueType: 'select',
+      fieldProps: {
+        options: authsType,
+      },
     },
     {
       title: '创建人',
       dataIndex: 'creator',
-    },
-    {
-      title: '状态',
-      dataIndex: 'status',
-      valueEnum: {
-        true: {
-          text: '激活',
-          status: 'Processing',
-        },
-        false: {
-          text: '禁用',
-          status: 'Error',
-        },
-      },
     },
     {
       title: '操作',
@@ -73,15 +106,6 @@ const RoleList = () => {
       valueType: 'option',
       render: (_, record) => (
         <>
-        <Tooltip title="设置权限">
-            <SafetyCertificateOutlined
-              style={{ fontSize: '17px', color: 'blue' }}
-              onClick={() => {
-                setFormValues(record);
-                handlePermsModalVisible(true);
-              }}
-            />
-          </Tooltip>
           <Divider type="vertical" />
           <Tooltip title="修改">
             <FormOutlined
@@ -137,29 +161,23 @@ const RoleList = () => {
             项&nbsp;&nbsp;
           </div>
         )}
-        request={(params) => queryRoles({ ...params }).then((res) => res.data)}
+        request={(params) => queryHosts({ ...params }).then((res) => res.data)}
         columns={columns}
         rowSelection={{}}
       />
       {createModalVisible && (
         <CreateForm
+          authsType={authsType}
+          hostsType={hostsType}
           actionRef={actionRef}
           onCancel={() => handleModalVisible(false)}
           modalVisible={createModalVisible}
         />
       )}
-      {permsModalVisible && (
-        <PermsForm
-          actionRef={actionRef}
-          onCancel={() => {
-            handlePermsModalVisible(false);
-          }}
-          modalVisible={permsModalVisible}
-          values={formValues}
-        />
-      )}
       {updateModalVisible && (
         <UpdateForm
+          authsType={authsType}
+          hostsType={hostsType}
           actionRef={actionRef}
           onCancel={() => {
             handleUpdateModalVisible(false);
@@ -172,4 +190,4 @@ const RoleList = () => {
   );
 };
 
-export default RoleList;
+export default HostList;

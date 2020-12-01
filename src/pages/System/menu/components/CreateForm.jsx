@@ -45,13 +45,13 @@ const CreateForm = (props) => {
       }}
     >
       <ProForm.Group>
-        <ProFormText name="name" label="名称" rules={[{ required: true }]} />
-        <ProFormText name="icon" label="图标" />
-        <ProFormText name="path" label="路径" />
-        <ProFormDigit name="sort" label="排序" fieldProps={{ precision: 0 }}/>
+        <ProFormText name="name" label="名称" width="m" rules={[{ required: true }]} />
+        <ProFormText name="icon" label="图标" width="m" />
+        <ProFormText name="path" label="路径" width="m" />
+        <ProFormDigit name="sort" label="排序" width="m" fieldProps={{ precision: 0 }}/>
       </ProForm.Group>
       <ProForm.Group>
-        <Form.Item label="上级菜单" name="parent_id">
+        <Form.Item label="上级菜单" name="parent_id" width="m">
           <TreeSelect
             style={{ width: 330 }}
             dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}

@@ -27,11 +27,11 @@ const CreateForm = (props) => {
       }}
     >
       <ProForm.Group>
-        <ProFormText name="name" label="名称" rules={[{ required: true }]} />
-        <ProFormText name="keyword" label="关键字" />
+        <ProFormText name="name" label="名称" width="m" rules={[{ required: true }]} />
+        <ProFormText name="keyword" label="关键字" width="m" />
       </ProForm.Group>
       <ProForm.Group>
-        <ProFormText name="desc" label="说明" />
+        <ProFormText name="desc" label="说明" width="m" />
       </ProForm.Group>
     </ModalForm>
   );

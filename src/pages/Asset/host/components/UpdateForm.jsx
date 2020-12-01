@@ -1,17 +1,19 @@
-import { updateRole } from '../service';
+import React, { useState } from 'react';
+import { updateHost } from '../service';
 import ProForm, { ModalForm, ProFormText, ProFormSelect } from '@ant-design/pro-form';
 import { message } from 'antd';
 
 const UpdateForm = (props) => {
-  const { actionRef, modalVisible, onCancel, values } = props;
+  const { actionRef, modalVisible, onCancel, values, authsType, hostsType } = props;
+  const [isPassword, setIsPassword] = useState(values.auth_type);
 
   return (
     <ModalForm
-      title="修改角色"
+      title="修改主机"
       visible={modalVisible}
       onVisibleChange={onCancel}
       onFinish={(v) => {
-        updateRole(values.id.toString(), v)
+        updateHost(values.id.toString(), v)
           .then((res) => {
             if (res.code === 200 && res.status === true) {
               message.success(res.message);
@@ -25,32 +27,61 @@ const UpdateForm = (props) => {
       }}
     >
       <ProForm.Group>
+        <ProFormText name="host_name" label="主机名称" width="m" initialValue={values.host_name} />
         <ProFormText
-          name="name"
-          label="名称"
-          initialValue={values.name}
+          name="ip_address"
+          label="地址"
+          width="m"
           rules={[{ required: true }]}
+          initialValue={values.ip_address}
         />
-        <ProFormText name="keyword" label="关键字" initialValue={values.keyword} />
-      </ProForm.Group>
-      <ProForm.Group>
-        <ProFormText name="desc" label="说明" initialValue={values.desc} />
+        <ProFormText
+          name="prot"
+          label="端口"
+          width="m"
+          rules={[{ required: true }]}
+          initialValue={values.prot}
+        />
         <ProFormSelect
-          name="status"
-          label="状态"
+          name="host_type"
+          label="主机类型"
+          width="m"
           hasFeedback
-          initialValue={values.status}
-          options={[
-            {
-              value: true,
-              label: '激活',
+          options={hostsType}
+          initialValue={values.host_type}
+        />
+        <ProFormSelect
+          name="auth_type"
+          label="认证类型"
+          hasFeedback
+          width="m"
+          initialValue={values.auth_type}
+          options={authsType}
+          fieldProps={{
+            onChange: (e) => {
+              if (e === 'password') {
+                setIsPassword(true);
+              } else {
+                setIsPassword(false);
+              }
             },
-            {
-              value: false,
-              label: '禁用',
-            },
-          ]}
-          rules={[{ required: true, message: '请选择状态' }]}
+          }}
+          rules={[{ required: true, message: '请选择认证类型' }]}
+        />
+        {isPassword ? (
+          <ProFormText
+            name="user"
+            label="用户"
+            width="m"
+            rules={[{ required: true }]}
+            initialValue={values.user}
+          />
+        ) : null}
+        <ProFormText.Password
+          label="认证密码"
+          name="password"
+          width="m"
+          placeholder="输入则修改密码"
         />
       </ProForm.Group>
     </ModalForm>

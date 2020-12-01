@@ -48,16 +48,18 @@ const UpdateForm = (props) => {
         <ProFormText
           name="name"
           label="名称"
+          width="m"
           initialValue={values.name}
           rules={[{ required: true }]}
         />
-        <ProFormText name="icon" label="图标" initialValue={values.icon} />
+        <ProFormText name="icon" label="图标" width="m" initialValue={values.icon} />
       </ProForm.Group>
       <ProForm.Group>
-        <ProFormText name="path" label="路径" initialValue={values.path} />
+        <ProFormText name="path" label="路径" width="m" initialValue={values.path} />
         <ProFormDigit
           name="sort"
           label="排序"
+          width="m"
           initialValue={values.sort}
           fieldProps={{ precision: 0 }}
         />
@@ -66,6 +68,7 @@ const UpdateForm = (props) => {
         <ProFormSelect
           name="status"
           label="状态"
+          width="m"
           hasFeedback
           initialValue={values.status}
           options={[
@@ -80,7 +83,7 @@ const UpdateForm = (props) => {
           ]}
           rules={[{ required: true, message: '请选择状态' }]}
         />
-        <Form.Item label="上级菜单" name="parent_id" initialValue={values.parent_id}>
+        <Form.Item label="上级菜单" name="parent_id" width="m" initialValue={values.parent_id}>
           <TreeSelect
             style={{ width: 330 }}
             dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}

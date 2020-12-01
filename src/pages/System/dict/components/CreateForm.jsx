@@ -47,11 +47,11 @@ const CreateForm = (props) => {
       }}
     >
       <ProForm.Group>
-        <ProFormText name="key" label="Key" rules={[{ required: true }]} />
-        <ProFormText name="value" label="Value" rules={[{ required: true }]} />
+        <ProFormText name="key" label="Key" width="m" rules={[{ required: true }]} />
+        <ProFormText name="value" label="Value" width="m" rules={[{ required: true }]} />
       </ProForm.Group>
       <ProForm.Group>
-        <Form.Item label="上级字典" name="parent_id">
+        <Form.Item label="上级字典" name="parent_id" width="m">
           <TreeSelect
             style={{ width: 330 }}
             dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
@@ -59,7 +59,7 @@ const CreateForm = (props) => {
             placeholder="请选择字典"
           />
         </Form.Item>
-        <ProFormText name="desc" label="说明" />
+        <ProFormText name="desc" label="说明" width="m"/>
       </ProForm.Group>
     </ModalForm>
   );

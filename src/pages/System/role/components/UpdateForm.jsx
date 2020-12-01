@@ -28,16 +28,18 @@ const UpdateForm = (props) => {
         <ProFormText
           name="name"
           label="名称"
+          width="m"
           initialValue={values.name}
           rules={[{ required: true }]}
         />
-        <ProFormText name="keyword" label="关键字" initialValue={values.keyword} />
+        <ProFormText name="keyword" label="关键字" width="m" initialValue={values.keyword} />
       </ProForm.Group>
       <ProForm.Group>
-        <ProFormText name="desc" label="说明" initialValue={values.desc} />
+        <ProFormText name="desc" label="说明" width="m" initialValue={values.desc} />
         <ProFormSelect
           name="status"
           label="状态"
+          width="m"
           hasFeedback
           initialValue={values.status}
           options={[

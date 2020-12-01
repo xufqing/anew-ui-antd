@@ -1,38 +1,26 @@
 import request from 'umi-request';
-export async function queryRoles(params) {
-  return request('/api/v1/role/list', {
+export async function queryHosts(params) {
+  return request('/api/v1/host/list', {
     params,
   });
 }
 
-export async function createRole(params) {
-  return request('/api/v1/role/create', {
+export async function createHost(params) {
+  return request('/api/v1/host/create', {
     method: 'POST',
     data: params,
   });
 }
 
-export async function getRolePermsByID(id, params) {
-  return request('/api/v1/role/perms/'+ id, {
-    data: params,
-  });
-}
-
-export async function updateRole(id, params) {
-  return request('/api/v1/role/update/'+ id, {
-    method: 'PATCH',
-    data: params,
-  });
-}
-export async function updatePermsRole(id, params) {
-  return request('/api/v1/role/perms/update/'+ id, {
+export async function updateHost(id, params) {
+  return request('/api/v1/host/update/'+ id, {
     method: 'PATCH',
     data: params,
   });
 }
 
-export async function deleteRole(params) {
-  return request('/api/v1/role/delete', {
+export async function deleteHost(params) {
+  return request('/api/v1/host/delete', {
     method: 'DELETE',
     data: params,
   });

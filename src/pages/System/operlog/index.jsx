@@ -74,7 +74,6 @@ const OperlogList = () => {
     {
       title: '用户名',
       dataIndex: 'username',
-      search: false,
     },
     {
       title: 'IP地址',

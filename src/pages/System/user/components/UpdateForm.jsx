@@ -47,12 +47,14 @@ const UpdateForm = (props) => {
         <ProFormText
           name="name"
           label="姓名"
+          width="m"
           initialValue={values.name}
           rules={[{ required: true }]}
         />
         <ProFormSelect
           name="status"
           label="状态"
+          width="m"
           hasFeedback
           initialValue={values.status}
           options={[
@@ -72,6 +74,7 @@ const UpdateForm = (props) => {
         <ProFormText
           name="mobile"
           label="手机"
+          width="m"
           initialValue={values.mobile}
           rules={[
             {
@@ -83,6 +86,7 @@ const UpdateForm = (props) => {
         <ProFormText
           name="email"
           label="邮箱"
+          width="m"
           initialValue={values.email}
           rules={[
             {
@@ -96,6 +100,7 @@ const UpdateForm = (props) => {
         <ProFormSelect
           name="role_id"
           label="角色"
+          width="m"
           hasFeedback
           initialValue={values.role_id}
           request={() =>
@@ -108,7 +113,7 @@ const UpdateForm = (props) => {
           }
           rules={[{ required: true, message: '请选择角色' }]}
         />
-        <Form.Item label="部门" name="dept_id" initialValue={values.dept_id}>
+        <Form.Item label="部门" name="dept_id" width="m" initialValue={values.dept_id}>
           <TreeSelect
             style={{ width: 330 }}
             dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
@@ -116,7 +121,7 @@ const UpdateForm = (props) => {
             placeholder="请选择部门"
           />
         </Form.Item>
-        <ProFormText.Password label="重置密码" name="password" placeholder="输入则修改密码" />
+        <ProFormText.Password label="重置密码" name="password" width="m" placeholder="输入则修改密码" />
       </ProForm.Group>
     </ModalForm>
   );

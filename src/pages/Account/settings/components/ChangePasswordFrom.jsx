@@ -4,7 +4,6 @@ import { changePassword } from '../service';
 import { message } from 'antd';
 
 const BaseForm = (props) => {
-  const { actionRef } = props;
   const [form] = ProForm.useForm();
 
   // 校验密码
@@ -48,14 +47,16 @@ const BaseForm = (props) => {
       }}
     >
       <ProForm.Group>
-        <ProFormText.Password label="当前密码" name="old_password" rules={[{ required: true }]} />
+        <ProFormText.Password label="当前密码" name="old_password" width="m" rules={[{ required: true }]} />
         <ProFormText.Password
           label="新密码"
+          width="m"
           name="new_password"
           rules={[{ required: true, validator: validateToNextPassword }]}
         />
         <ProFormText.Password
           label="确认密码"
+          width="m"
           name="new_password2"
           rules={[{ required: true, validator: handleCheckRePwd }]}
         />

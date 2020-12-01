@@ -48,18 +48,20 @@ const UpdateForm = (props) => {
         <ProFormText
           name="key"
           label="Key"
+          width="m"
           rules={[{ required: true }]}
           initialValue={values.key}
         />
         <ProFormText
           name="value"
           label="Value"
+          width="m"
           rules={[{ required: true }]}
           initialValue={values.value}
         />
       </ProForm.Group>
       <ProForm.Group>
-        <Form.Item label="上级字典" name="parent_id" initialValue={values.parent_id}>
+        <Form.Item label="上级字典" name="parent_id" initialValue={values.parent_id} width="m">
           <TreeSelect
             style={{ width: 330 }}
             dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
@@ -67,11 +69,12 @@ const UpdateForm = (props) => {
             placeholder="请选择字典"
           />
         </Form.Item>
-        <ProFormText name="desc" label="说明" initialValue={values.desc} />
+        <ProFormText name="desc" label="说明" initialValue={values.desc} width="m" />
       </ProForm.Group>
       <ProFormSelect
         name="status"
         label="状态"
+        width="m"
         hasFeedback
         initialValue={values.status}
         options={[
