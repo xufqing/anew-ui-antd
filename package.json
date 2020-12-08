@@ -64,7 +64,9 @@
     "react-helmet-async": "^1.0.4",
     "umi": "^3.2.14",
     "umi-request": "^1.0.8",
-    "use-merge-value": "^1.0.1"
+    "use-merge-value": "^1.0.1",
+    "xterm": "^4.9.0",
+    "xterm-addon-fit": "^0.4.0"
   },
   "devDependencies": {
     "@ant-design/pro-cli": "^1.0.18",

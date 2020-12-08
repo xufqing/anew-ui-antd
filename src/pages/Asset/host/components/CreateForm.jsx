@@ -5,7 +5,7 @@ import { message } from 'antd';
 
 const CreateForm = (props) => {
   const { actionRef, modalVisible, onCancel, authsType, hostsType } = props;
-  const [isPassword, setIsPassword] = useState(false);
+  const [isKey, setIsKey] = useState(false);
 
   return (
     <ModalForm
@@ -30,7 +30,7 @@ const CreateForm = (props) => {
       <ProForm.Group>
         <ProFormText name="host_name" label="主机名称" width="m" />
         <ProFormText name="ip_address" label="地址" width="m" rules={[{ required: true }]} />
-        <ProFormText name="prot" label="端口" width="m" rules={[{ required: true }]} />
+        <ProFormText name="port" label="端口" width="m" rules={[{ required: true }]} />
         <ProFormSelect
           name="host_type"
           label="主机类型"
@@ -45,26 +45,37 @@ const CreateForm = (props) => {
           hasFeedback
           width="m"
           options={authsType}
+          rules={[{ required: true, message: '请选择认证类型' }]}
           fieldProps={{
             onChange: (e) => {
-              if (e === 'password') {
-                setIsPassword(true);
+              if (e === 'key') {
+                setIsKey(true);
               } else {
-                setIsPassword(false);
+                setIsKey(false);
               }
             },
           }}
-          rules={[{ required: true, message: '请选择认证类型' }]}
         />
-        {isPassword ? (
-          <ProFormText name="user" label="用户" width="m" rules={[{ required: true }]} />
+        <ProFormText name="user" label="用户" width="m" rules={[{ required: true }]} />
+
+        {isKey ? (
+          <ProFormText name="privatekey" label="密钥路径" width="m" rules={[{ required: true }]} />
         ) : null}
-        <ProFormText.Password
-          label="认证密码"
-          name="password"
-          width="m"
-          rules={[{ required: isPassword }]}
-        />
+        {isKey ? (
+          <ProFormText.Password
+            label="密钥密码"
+            name="key_passphrase"
+            width="m"
+            placeholder="如果有密码"
+          />
+        ) : (
+          <ProFormText.Password
+            label="认证密码"
+            name="password"
+            width="m"
+            rules={[{ required: true }]}
+          />
+        )}
       </ProForm.Group>
     </ModalForm>
   );

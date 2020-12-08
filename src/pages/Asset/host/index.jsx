@@ -2,7 +2,7 @@ import {
   DeleteOutlined,
   PlusOutlined,
   FormOutlined,
-  SafetyCertificateOutlined,
+  CodeTwoTone,
 } from '@ant-design/icons';
 import { Button, Tooltip, Divider, Modal, message } from 'antd';
 import React, { useEffect, useState, useRef } from 'react';
@@ -12,6 +12,7 @@ import CreateForm from './components/CreateForm';
 import UpdateForm from './components/UpdateForm';
 import { queryHosts, deleteHost } from './service';
 import { queryDicts } from '@/pages/System/dict/service';
+import { history } from 'umi';
 
 const HostList = () => {
   const [createModalVisible, handleModalVisible] = useState(false);
@@ -78,7 +79,7 @@ const HostList = () => {
     },
     {
       title: '端口',
-      dataIndex: 'prot',
+      dataIndex: 'port',
     },
     {
       title: '主机类型',
@@ -106,6 +107,15 @@ const HostList = () => {
       valueType: 'option',
       render: (_, record) => (
         <>
+          <Tooltip title="控制台">
+            <CodeTwoTone
+              style={{ fontSize: '17px', color: 'blue' }}
+              onClick={() => {
+                // history.push('/asset/console?host_id=' + record.id.toString())
+                window.open('/ssh/console?host_id=' + record.id.toString())
+              }}
+            />
+          </Tooltip>
           <Divider type="vertical" />
           <Tooltip title="修改">
             <FormOutlined

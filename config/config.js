@@ -35,6 +35,19 @@ export default defineConfig({
         },
       ],
     },
+    // 无布局路由
+    {
+      path: '/ssh',
+      //component: '../layouts/UserLayout',
+      routes: [
+        {
+          path: '/ssh/console',
+          name: 'console',
+          component: './SSH/console',
+          //authority: ['admin'],
+        },
+      ],
+    },
     {
       path: '/',
       component: '../layouts/SecurityLayout',
@@ -75,6 +88,12 @@ export default defineConfig({
                   path: '/asset/host',
                   name: 'host',
                   component: './Asset/host',
+                  //authority: ['admin'],
+                },
+                {
+                  path: '/asset/connection',
+                  name: 'connection',
+                  component: './Asset/connection',
                   //authority: ['admin'],
                 },
               ],

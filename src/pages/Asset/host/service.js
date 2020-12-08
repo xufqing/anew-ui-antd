@@ -5,6 +5,10 @@ export async function queryHosts(params) {
   });
 }
 
+export async function queryHostByID(id) {
+  return request('/api/v1/host/info/' + id)
+}
+
 export async function createHost(params) {
   return request('/api/v1/host/create', {
     method: 'POST',
