@@ -47,7 +47,7 @@ const CreateForm = (props) => {
           options={authsType}
           rules={[{ required: true, message: '请选择认证类型' }]}
           fieldProps={{
-            onChange: (e) => {
+            onSelect: (e) => {
               if (e === 'key') {
                 setIsKey(true);
               } else {

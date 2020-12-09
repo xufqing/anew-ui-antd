@@ -59,7 +59,7 @@ const UpdateForm = (props) => {
           options={authsType}
           rules={[{ required: true, message: '请选择认证类型' }]}
           fieldProps={{
-            onChange: (e) => {
+            onSelect: (e) => {
               if (e === 'key') {
                 setIsKey(true);
               } else {
@@ -84,14 +84,14 @@ const UpdateForm = (props) => {
             label="密钥密码"
             name="key_passphrase"
             width="m"
-            placeholder="如果有密码"
+            placeholder="输入则修改"
           />
         ) : (
           <ProFormText.Password
             label="服务器密码"
             name="password"
             width="m"
-            rules={[{ required: true }]}
+            placeholder="输入则修改"
           />
         )}
       </ProForm.Group>

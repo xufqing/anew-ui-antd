@@ -1,5 +1,5 @@
 import { Tooltip, Tag } from 'antd';
-import { QuestionCircleOutlined } from '@ant-design/icons';
+import { GithubOutlined } from '@ant-design/icons';
 import React from 'react';
 import { connect } from 'umi';
 import Avatar from './AvatarDropdown';
@@ -46,7 +46,7 @@ const GlobalHeaderRight = (props) => {
         //   //console.log('input', value);
         // }}
       />
-      <Tooltip title="使用文档">
+      <Tooltip title="项目地址">
         <a
           style={{
             color: 'inherit',
@@ -56,7 +56,7 @@ const GlobalHeaderRight = (props) => {
           rel="noopener noreferrer"
           className={styles.action}
         >
-          <QuestionCircleOutlined />
+          <GithubOutlined />
         </a>
       </Tooltip>
       <Avatar />
