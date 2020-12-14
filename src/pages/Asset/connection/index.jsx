@@ -48,7 +48,7 @@ const ConnectionList = () => {
     },
     {
       title: '接入时间',
-      dataIndex: 'connection_time',
+      dataIndex: 'connect_time',
     },
     {
       title: '最后活动时间',
@@ -90,7 +90,7 @@ const ConnectionList = () => {
         pagination={false}
         search={false}
         actionRef={actionRef}
-        rowKey="connection_time"
+        rowKey="connect_time"
         request={(params) => queryConnections({ ...params })}
         columns={columns}
       />

@@ -1,73 +1,217 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import {
+  FileOutlined,
+  FolderTwoTone,
+  HomeOutlined,
+  ApartmentOutlined,
+  DeleteOutlined,
+  UploadOutlined,
+  LinkOutlined,
+  DownloadOutlined,
+  InboxOutlined,
+} from '@ant-design/icons';
 import {
   Drawer,
   Breadcrumb,
-  Table,
-  Icon,
-  Divider,
+  Upload,
   Switch,
+  Divider,
+  Modal,
   Button,
   Progress,
-  Modal,
+  Tooltip,
   message,
 } from 'antd';
 import styles from '../index.module.css';
+import ProTable from '@ant-design/pro-table';
+import { querySSHFile, deleteSSHFile } from '../service';
+import lds from 'lodash';
 
 const FileManager = (props) => {
-  const { modalVisible, onCancel } = props;
-
+  const { modalVisible, onCancel, connKey } = props;
+  const [columnData, setColumnData] = useState(null);
+  const [showHidden, setShowHidden] = useState(false);
+  const [childrenDrawer, setChildrenDrawer] = useState(false);
+  const [currentPathArr, setCurrentPathArr] = useState([]);
+  const [initPath, setInitPath] = useState('');
   const columns = [
     {
       title: '名称',
-      key: 'name',
-      render: (info) =>
-        info.kind === 'd' ? (
-          <div onClick={() => {}} style={{ cursor: 'pointer' }}>
-            <Icon type="folder" style={{ color: '#1890ff' }} />
-            <span style={{ color: '#1890ff', paddingLeft: 5 }}>{info.name}</span>
+      dataIndex: 'name',
+      render: (_, record) =>
+        record.isDir ? (
+          <div onClick={() => getFileData(connKey, record.path)} style={{ cursor: 'pointer' }}>
+            <FolderTwoTone />
+            <span style={{ color: '#1890ff', paddingLeft: 5 }}>{record.name}</span>
           </div>
         ) : (
           <React.Fragment>
-            <Icon type="file" />
-            <span style={{ paddingLeft: 5 }}>{info.name}</span>
+            {record.isLink ? (
+              <div>
+                <LinkOutlined />
+                <Tooltip title="Is Link">
+                  <span style={{ color: '#3cb371', paddingLeft: 5 }}>{record.name}</span>
+                </Tooltip>
+              </div>
+            ) : (
+              <div>
+                <FileOutlined />
+                <span style={{ paddingLeft: 5 }}>{record.name}</span>
+              </div>
+            )}
           </React.Fragment>
         ),
-      ellipsis: true,
     },
     {
       title: '大小',
       dataIndex: 'size',
-      align: 'right',
-      className: styles.fileSize,
-      width: 90,
     },
     {
       title: '修改时间',
-      dataIndex: 'date',
-      width: 190,
+      dataIndex: 'mtime',
     },
     {
       title: '属性',
-      key: 'attr',
-      render: (info) => `${info.kind}${info.code}`,
-      width: 120,
+      dataIndex: 'mode',
     },
     {
       title: '操作',
-      width: 80,
-      align: 'right',
-      key: 'action',
-      render: (info) =>
-        info.kind === '-' ? (
-          <React.Fragment>
-            <Icon style={{ color: '#1890ff' }} type="download" onClick={() => {}} />
+      dataIndex: 'option',
+      valueType: 'option',
+      render: (_, record) =>
+        !record.isDir && !record.isLink ? (
+          <>
+            <Tooltip title="下载文件">
+              <DownloadOutlined
+                style={{ fontSize: '17px', color: 'blue' }}
+                onClick={() => handleDownload(connKey, record.path)}
+              />
+            </Tooltip>
             <Divider type="vertical" />
-            <Icon style={{ color: 'red' }} type="delete" onClick={() => {}} />
-          </React.Fragment>
+            <Tooltip title="删除文件">
+              <DeleteOutlined
+                style={{ fontSize: '17px', color: 'red' }}
+                onClick={() => handleDelete(connKey, record.path)}
+              />
+            </Tooltip>
+          </>
         ) : null,
     },
   ];
 
+  const _dirSort = (item) => {
+    return item.isDir;
+  };
+
+  const getFileData = (key, path) => {
+    querySSHFile(key, path).then((res) => {
+      const obj = lds.orderBy(res.data, [_dirSort, 'name'], ['desc', 'asc']);
+      showHidden ? setColumnData(obj) : setColumnData(obj.filter((x) => !x.name.startsWith('.')));
+      try {
+        // 获取服务器的当前路径
+        let pathb = obj[0].path;
+        const index = pathb.lastIndexOf('/');
+        pathb = pathb.substring(0, index + 1);
+        setCurrentPathArr(pathb.split('/').filter((x) => x !== ''));
+        setInitPath(pathb); // 保存当前路径，刷新用
+      } catch (exception) {
+        setCurrentPathArr(path.split('/').filter((x) => x !== ''));
+        setInitPath(path);
+      }
+    });
+  };
+
+  const getChdirDirData = (key, path) => {
+    const index = currentPathArr.indexOf(path);
+    const currentDir = '/' + currentPathArr.splice(0, index + 1).join('/');
+    getFileData(key, currentDir);
+  };
+
+  const handleDelete = (key, path) => {
+    if (!path) return;
+    const index = path.lastIndexOf('/');
+    const currentDir = path.substring(0, index + 1);
+    const currentFile = path.substring(index + 1, path.length);
+    const content = `您是否要删除 ${currentFile}？`;
+    Modal.confirm({
+      title: '注意',
+      content,
+      onOk: () => {
+        deleteSSHFile(key, path).then((res) => {
+          if (res.code === 200 && res.status === true) {
+            message.success(res.message);
+            getFileData(key, currentDir);
+          }
+        });
+      },
+      onCancel() {},
+    });
+  };
+
+  const handleDownload = (key, path) => {
+    if (!path) return;
+    const index = path.lastIndexOf('/');
+    const currentFile = path.substring(index + 1, path.length);
+    const content = `您是否要下载 ${currentFile}？`;
+    Modal.confirm({
+      title: '注意',
+      content,
+      onOk: () => {
+        const token = localStorage.getItem('token');
+        const link = document.createElement('a');
+        link.href = `/api/v1/host/ssh/download?key=${key}&path=${path}&token=${token}`;
+        document.body.appendChild(link);
+        const evt = document.createEvent('MouseEvents');
+        evt.initEvent('click', false, false);
+        link.dispatchEvent(evt);
+        document.body.removeChild(link);
+      },
+      onCancel() {},
+    });
+  };
+
+  const uploadProps = {
+    name: 'file',
+    action: `/api/v1/host/ssh/upload?key=${connKey}&path=${initPath}`,
+    multiple: true,
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+    showUploadList: {
+      removeIcon: false,
+      showRemoveIcon: false,
+    },
+    onChange(info) {
+      // if (info.file.status !== 'uploading') {
+      //   console.log(info.file, info.fileList);
+      // }
+      console.log(info);
+      if (info.file.status === 'done') {
+        message.success(`${info.file.name} file uploaded successfully`);
+        getFileData(connKey, initPath); // 刷新数据
+      } else if (info.file.status === 'error') {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+    progress: {
+      strokeColor: {
+        '0%': '#108ee9',
+        '100%': '#87d068',
+      },
+      strokeWidth: 3,
+      format: (percent) => `${parseFloat(percent.toFixed(2))}%`,
+    },
+  };
+
+  useEffect(() => {
+    getFileData(connKey, '');
+  }, []);
+
+  useEffect(() => {
+    // 是否显示隐藏文件
+    getFileData(connKey, initPath); // 刷新数据
+  }, [showHidden]);
+  const { Dragger } = Upload;
   return (
     <Drawer
       title="文件管理器"
@@ -76,17 +220,67 @@ const FileManager = (props) => {
       visible={modalVisible}
       onClose={onCancel}
     >
-      <Table
-        size="small"
-        rowKey="name"
-        //loading={this.state.fetching}
+      {/* <input style={{ display: 'none' }} type="file" ref={(ref) => (this.input = ref)} /> */}
+      <div className={styles.drawerHeader}>
+        <Breadcrumb>
+          <Breadcrumb.Item href="#" onClick={() => getFileData(connKey, '/')}>
+            <ApartmentOutlined />
+          </Breadcrumb.Item>
+          <Breadcrumb.Item href="#" onClick={() => getFileData(connKey, '')}>
+            <HomeOutlined />
+          </Breadcrumb.Item>
+          {currentPathArr.map((item) => (
+            <Breadcrumb.Item key={item} href="#" onClick={() => getChdirDirData(connKey, item)}>
+              <span>{item}</span>
+            </Breadcrumb.Item>
+          ))}
+        </Breadcrumb>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <span>显示隐藏文件：</span>
+          <Switch
+            checked={showHidden}
+            checkedChildren="开启"
+            unCheckedChildren="关闭"
+            onChange={(v) => {
+              setShowHidden(v);
+            }}
+          />
+
+          <Button
+            style={{ marginLeft: 10 }}
+            size="small"
+            type="primary"
+            icon={<UploadOutlined />}
+            onClick={() => setChildrenDrawer(true)}
+          >
+            上传文件
+          </Button>
+        </div>
+      </div>
+      <Drawer
+        title="上传文件"
+        width={320}
+        closable={false}
+        onClose={() => setChildrenDrawer(false)}
+        visible={childrenDrawer}
+      >
+        <div style={{ height: 150 }}>
+          <Dragger {...uploadProps}>
+            <p className="ant-upload-drag-icon">
+              <InboxOutlined />
+            </p>
+            <p className="ant-upload-text">单击或拖入上传</p>
+            <p className="ant-upload-hint">支持多文件</p>
+          </Dragger>
+        </div>
+      </Drawer>
+      <ProTable
         pagination={false}
+        search={false}
+        toolBarRender={false}
+        rowKey="name"
+        dataSource={columnData}
         columns={columns}
-        scroll={{ y: scrollY }}
-        bodyStyle={{
-          fontFamily: "'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace",
-        }}
-        //dataSource={objects}
       />
     </Drawer>
   );

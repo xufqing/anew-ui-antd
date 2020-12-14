@@ -1,21 +1,18 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { Prompt } from 'react-router-dom';
 import { Button } from 'antd';
 import { queryHostByID } from '@/pages/Asset/host/service';
-import { useWinSize } from '@/utils/utils';
 import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import 'xterm/css/xterm.css';
 import styles from './index.module.css';
 import FileManager from './components/FileManager';
-import { truncate } from 'lodash';
 
 const Console = (props = {}) => {
   const host_id = props.location.query.host_id;
   const termRf = useRef(null);
   const [xterm, setXterm] = useState(null);
+  const [webSocketKey, setWebSocketKey] = useState(null);
   const [host, setHost] = useState({});
-  const winSize = useWinSize();
   const [fileModalVisible, setFileModalVisible] = useState(false);
 
   const terminalOpts = {
@@ -26,8 +23,6 @@ const Console = (props = {}) => {
     //   background: '#202124',
     //   foreground: '#ffffff73',
     // },
-    width: winSize.width - 100,
-    height: winSize.height,
     cursorStyle: 'underline',
     cursorBlink: true,
   };
@@ -47,14 +42,7 @@ const Console = (props = {}) => {
         const token = localStorage.getItem('token');
         const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
         let webSocket = new WebSocket(
-          `${protocol}//localhost:9000/api/v1/host/ssh?host_id=` +
-            host_id +
-            '&token=' +
-            token +
-            '&width=' +
-            (winSize.width - 100) +
-            '&height=' +
-            winSize.height,
+          `${protocol}//localhost:9000/api/v1/host/ssh?host_id=` + host_id + '&token=' + token,
         );
         xterm.writeln('正在努力连接服务器中...');
         // 监听窗口
@@ -65,7 +53,15 @@ const Console = (props = {}) => {
           fitPlugin.fit();
         };
         // 接收服务端消息
-        webSocket.onmessage = (e) => xterm.write(e.data);
+        webSocket.onmessage = (e) => {
+          const message = e.data;
+          if (message.indexOf('Anew-Sec-WebSocket-Key') != -1) {
+            setWebSocketKey(message.substring(message.lastIndexOf(':') + 1, message.length));
+          } else {
+            xterm.write(message);
+          }
+        };
+
         // 监听键盘并发送
         xterm.onData((data) => {
           const cmd = JSON.stringify({ type: 'cmd', cmd: data, cols: '', rows: '' });
@@ -96,24 +92,26 @@ const Console = (props = {}) => {
     };
     handleTerminalInit();
   }, [termRf, xterm]);
-
   //监听窗口事件
-  useEffect(() => {
-    const listener = (ev) => {
-      ev.preventDefault();
-      ev.returnValue = '确定离开关闭控制台吗？';
-    };
-    window.addEventListener('beforeunload', listener);
-    return () => {
-      window.removeEventListener('beforeunload', listener);
-    };
-  }, []);
+  // useEffect(() => {
+  //   const listener = (ev) => {
+  //     console.log(ev)
+  //     ev.preventDefault();
+  //     ev.returnValue = '确定离开关闭控制台吗？';
+  //   };
+  //   window.addEventListener('beforeunload', listener);
+  //   return () => {
+  //     window.removeEventListener('beforeunload', listener);
+  //   };
+  // }, []);
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         <div>
           {host.host_name} | {host.user}@{host.ip_address}:{host.port}
+        </div>
+        <div style={{ textAlign: 'right',paddingRight: 15 }}>
           <Button
             type="primary"
             onClick={() => {
@@ -132,10 +130,10 @@ const Console = (props = {}) => {
           onCancel={() => {
             setFileModalVisible(false);
           }}
+          connKey={encodeURIComponent(webSocketKey)}
           modalVisible={fileModalVisible}
         />
       )}
-      <Prompt when={true} message={(location) => '确定离开关闭控制台吗？'} />
     </div>
   );
 };
