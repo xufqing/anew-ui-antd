@@ -177,10 +177,10 @@ const FileManager = (props) => {
     headers: {
       Authorization: `Bearer ${localStorage.getItem('token')}`,
     },
-    showUploadList: {
-      removeIcon: false,
-      showRemoveIcon: false,
-    },
+    // showUploadList: {
+    //   removeIcon: false,
+    //   showRemoveIcon: false,
+    // },
     onChange(info) {
       // if (info.file.status !== 'uploading') {
       //   console.log(info.file, info.fileList);

@@ -5,21 +5,26 @@ import { Card, Col, Button, Upload, Row, Tabs, message } from 'antd';
 import BaseForm from './components/BaseForm';
 import ChangePasswordFrom from './components/ChangePasswordFrom';
 import IconFont from '@/components/IconFont';
-import { connect } from 'umi';
+import { queryUserInfo } from './service';
 import styles from './settings.less';
 
-const Settings = (props) => {
-  const { userInfo = {}, dispatch } = props;
+const Settings = () => {
   const [uploadLoading, setUploadLoading] = useState(false);
+  const [userInfo, setUserInfo] = useState({});
 
   useEffect(() => {
-    if (dispatch) {
-      dispatch({
-        type: 'user/getUserInfo',
-      });
-    }
+    getInfo();
   }, []);
 
+  // useEffect(() => {
+  //   console.log('user info');
+  // }, [userInfo]);
+
+  const getInfo = () => {
+    queryUserInfo().then((res) => {
+      setUserInfo(res.data);
+    });
+  };
   const beforeUpload = (file) => {
     const isJpgOrPng =
       file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/gif';
@@ -39,22 +44,17 @@ const Settings = (props) => {
       return;
     }
     if (info.file.status === 'done') {
-      console.log(info)
       message.success('上传成功');
       let currentUser = JSON.parse(localStorage.getItem('user')) || {};
       currentUser.avatar = info.file.response.data.url;
       localStorage.setItem('user', JSON.stringify(currentUser));
-      if (dispatch) {
-        dispatch({
-          type: 'user/getUserInfo',
-        });
-      }
+      getInfo();
     }
   };
 
   const tokenHeaders = {
-    Authorization: "Bearer " + localStorage.getItem('token'),
-  }
+    Authorization: 'Bearer ' + localStorage.getItem('token'),
+  };
   return (
     <GridContent>
       {userInfo.username && (
@@ -144,7 +144,7 @@ const Settings = (props) => {
             <Card title="个人设置" bordered={false} style={{ width: '730px', height: '480px' }}>
               <Tabs tabPosition="right" onChange={() => {}}>
                 <Tabs.TabPane tab="基本信息" key="baseInfo">
-                  <BaseForm values={userInfo} dispatch={dispatch} />
+                  <BaseForm values={userInfo} getInfo={() => getInfo()} />
                 </Tabs.TabPane>
                 <Tabs.TabPane tab="修改密码" key="changePwd">
                   <ChangePasswordFrom />
@@ -158,6 +158,4 @@ const Settings = (props) => {
   );
 };
 
-export default connect(({ user }) => ({
-  userInfo: user.userInfo,
-}))(Settings);
+export default Settings;

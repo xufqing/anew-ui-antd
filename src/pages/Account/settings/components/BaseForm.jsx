@@ -4,7 +4,8 @@ import { updateUserInfo } from '../service';
 import { message } from 'antd';
 
 const BaseForm = (props) => {
-  const { values, dispatch } = props;
+  const { values, getInfo } = props;
+
   return (
     <ProForm
       onFinish={async (v) => {
@@ -14,11 +15,7 @@ const BaseForm = (props) => {
             let currentUser = JSON.parse(localStorage.getItem('user')) || {};
             currentUser.name = v.name;
             localStorage.setItem('user', JSON.stringify(currentUser));
-            if (dispatch) {
-              dispatch({
-                type: 'user/getUserInfo',
-              });
-            }
+            getInfo();
           }
         });
       }}

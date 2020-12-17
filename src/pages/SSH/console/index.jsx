@@ -42,7 +42,8 @@ const Console = (props = {}) => {
         const token = localStorage.getItem('token');
         const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
         let webSocket = new WebSocket(
-          `${protocol}//localhost:9000/api/v1/host/ssh?host_id=` + host_id + '&token=' + token,
+          // `${protocol}//localhost:9000/api/v1/host/ssh?host_id=` + host_id + '&token=' + token,
+          `${protocol}//${window.location.host}/api/v1/host/ssh?host_id=` + host_id + '&token=' + token,
         );
         xterm.writeln('正在努力连接服务器中...');
         // 监听窗口
