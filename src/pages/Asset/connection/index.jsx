@@ -39,6 +39,10 @@ const ConnectionList = () => {
       dataIndex: 'host_name',
     },
     {
+      title: '用户',
+      dataIndex: 'name',
+    },
+    {
       title: 'IP地址',
       dataIndex: 'ip_address',
     },
@@ -51,16 +55,8 @@ const ConnectionList = () => {
       dataIndex: 'connect_time',
     },
     {
-      title: '最后活动时间',
-      dataIndex: 'last_active_time',
-    },
-    {
       title: '用户名',
-      dataIndex: 'username',
-    },
-    {
-      title: '姓名',
-      dataIndex: 'name',
+      dataIndex: 'user_name',
     },
     {
       title: '标识',

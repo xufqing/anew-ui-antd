@@ -96,6 +96,12 @@ export default defineConfig({
                   component: './Asset/connection',
                   //authority: ['admin'],
                 },
+                {
+                  path: '/asset/record',
+                  name: 'record',
+                  component: './Asset/record',
+                  //authority: ['admin'],
+                },
               ],
             },
             {

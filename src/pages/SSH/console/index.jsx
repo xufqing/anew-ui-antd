@@ -45,12 +45,12 @@ const Console = (props = {}) => {
           // `${protocol}//localhost:9000/api/v1/host/ssh?host_id=` + host_id + '&token=' + token,
           `${protocol}//${window.location.host}/api/v1/host/ssh?host_id=` + host_id + '&token=' + token,
         );
-        xterm.writeln('正在努力连接服务器中...');
         // 监听窗口
         webSocket.onopen = (e) => {
+          console.log('socket连接成功');
           xterm.open(termRf.current);
-          xterm.clear();
           xterm.focus();
+          xterm.clear();
           fitPlugin.fit();
         };
         // 接收服务端消息

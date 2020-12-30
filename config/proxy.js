@@ -14,13 +14,11 @@ export default {
         '^': '',
       },
     },
-    // 代理显示上传的头像
-    '/upload/': {
-      target: 'http://127.0.0.1:8011',
+    // 控制台socket
+    '/api/v1/host/ssh': {
+      target: 'http://127.0.0.1:9000/',
       changeOrigin: true,
-      pathRewrite: {
-        '^': '',
-      },
+      ws: true,
     },
   },
   test: {
