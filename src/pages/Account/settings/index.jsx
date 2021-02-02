@@ -59,7 +59,7 @@ const Settings = () => {
     <GridContent>
       {userInfo.username && (
         <Row gutter={24}>
-          <Col lg={7} md={24}>
+          <Col span={10}>
             <Card
               title="关于我"
               bordered={false}
@@ -140,8 +140,8 @@ const Settings = () => {
               </div>
             </Card>
           </Col>
-          <Col lg={7} md={24}>
-            <Card title="个人设置" bordered={false} style={{ width: '730px', height: '480px' }}>
+          <Col span={14}>
+            <Card title="个人设置" bordered={false} >
               <Tabs tabPosition="right" onChange={() => {}}>
                 <Tabs.TabPane tab="基本信息" key="baseInfo">
                   <BaseForm values={userInfo} getInfo={() => getInfo()} />

@@ -1,15 +1,21 @@
-import { DeleteOutlined, VideoCameraOutlined } from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  PlusOutlined,
+  FormOutlined,
+} from '@ant-design/icons';
 import { Button, Tooltip, Divider, Modal, message } from 'antd';
-import React, { useRef,useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
-import { queryRecords, deleteRecord } from './service';
-import PlayerModal from './components/PlayerModal';
+import CreateForm from './components/CreateForm';
+import UpdateForm from './components/UpdateForm';
+import { queryGroups, deleteGroup } from './service';
 
-const RecordList = () => {
+const GroupList = () => {
+  const [createModalVisible, handleModalVisible] = useState(false);
+  const [updateModalVisible, handleUpdateModalVisible] = useState(false);
+  const [formValues, setFormValues] = useState({});
   const actionRef = useRef();
-  const [modalVisible, handleModalVisible] = useState(false);
-  const [values, setValues] = useState({});
 
   const handleDelete = (record) => {
     if (!record) return;
@@ -19,7 +25,7 @@ const RecordList = () => {
       title: '注意',
       content,
       onOk: () => {
-        deleteRecord(record).then((res) => {
+        deleteGroup(record).then((res) => {
           if (res.code === 200 && res.status === true) {
             message.success(res.message);
             if (actionRef.current) {
@@ -34,36 +40,17 @@ const RecordList = () => {
 
   const columns = [
     {
-      title: '用户名',
-      dataIndex: 'user_name',
+      title: '名称',
+      dataIndex: 'name',
     },
     {
-      title: '主机名',
-      dataIndex: 'host_name',
+      title: '说明',
+      dataIndex: 'desc',
+      search: false,
     },
     {
-      title: '用户',
-      dataIndex: 'user',
-    },
-    {
-      title: 'IP地址',
-      dataIndex: 'ip_address',
-    },
-    {
-      title: '端口',
-      dataIndex: 'port',
-    },
-    {
-      title: '标识',
-      dataIndex: 'key',
-    },
-    {
-      title: '接入时间',
-      dataIndex: 'connect_time',
-    },
-    {
-      title: '注销时间',
-      dataIndex: 'logout_time',
+      title: '创建人',
+      dataIndex: 'creator',
     },
     {
       title: '操作',
@@ -71,11 +58,15 @@ const RecordList = () => {
       valueType: 'option',
       render: (_, record) => (
         <>
-          <Tooltip title="播放录像">
-            <VideoCameraOutlined style={{ fontSize: '17px', color: '#52c41a' }} onClick={() => {
-                setValues(record);
-                handleModalVisible(true);
-              }} />
+          <Divider type="vertical" />
+          <Tooltip title="修改">
+            <FormOutlined
+              style={{ fontSize: '17px', color: '#52c41a' }}
+              onClick={() => {
+                setFormValues(record);
+                handleUpdateModalVisible(true);
+              }}
+            />
           </Tooltip>
           <Divider type="vertical" />
           <Tooltip title="删除">
@@ -95,6 +86,9 @@ const RecordList = () => {
         actionRef={actionRef}
         rowKey="id"
         toolBarRender={(action, { selectedRows }) => [
+          <Button key="1" type="primary" onClick={() => handleModalVisible(true)}>
+            <PlusOutlined /> 新建
+          </Button>,
           selectedRows && selectedRows.length > 0 && (
             <Button
               key="2"
@@ -119,21 +113,32 @@ const RecordList = () => {
             项&nbsp;&nbsp;
           </div>
         )}
-        request={(params) => queryRecords({ ...params }).then((res) => res.data)}
+        request={(params) => queryGroups({ ...params }).then((res) => res.data)}
         columns={columns}
         rowSelection={{}}
+        search={{
+          filterType: 'light',
+        }}
       />
-      {modalVisible && (
-        <PlayerModal
+      {createModalVisible && (
+        <CreateForm
+          actionRef={actionRef}
+          onCancel={() => handleModalVisible(false)}
+          modalVisible={createModalVisible}
+        />
+      )}
+      {updateModalVisible && (
+        <UpdateForm
+          actionRef={actionRef}
           onCancel={() => {
-            handleModalVisible(false);
+            handleUpdateModalVisible(false);
           }}
-          modalVisible={modalVisible}
-          values={values}
+          modalVisible={updateModalVisible}
+          values={formValues}
         />
       )}
     </PageHeaderWrapper>
   );
 };
 
-export default RecordList;
+export default GroupList;

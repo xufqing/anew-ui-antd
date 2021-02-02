@@ -1,6 +1,6 @@
-import { DeleteOutlined} from '@ant-design/icons';
+import { DeleteOutlined } from '@ant-design/icons';
 import { Tooltip, Divider, Modal, message } from 'antd';
-import React, {useRef } from 'react';
+import React, { useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import { queryConnections, deleteConnection } from './service';

@@ -43,7 +43,10 @@ const Console = (props = {}) => {
         const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
         let webSocket = new WebSocket(
           // `${protocol}//localhost:9000/api/v1/host/ssh?host_id=` + host_id + '&token=' + token,
-          `${protocol}//${window.location.host}/api/v1/host/ssh?host_id=` + host_id + '&token=' + token,
+          `${protocol}//${window.location.host}/api/v1/host/ssh?host_id=` +
+            host_id +
+            '&token=' +
+            token,
         );
         // 监听窗口
         webSocket.onopen = (e) => {
@@ -112,7 +115,7 @@ const Console = (props = {}) => {
         <div>
           {host.host_name} | {host.user}@{host.ip_address}:{host.port}
         </div>
-        <div style={{ textAlign: 'right',paddingRight: 15 }}>
+        <div style={{ textAlign: 'right', paddingRight: 15 }}>
           <Button
             type="primary"
             onClick={() => {

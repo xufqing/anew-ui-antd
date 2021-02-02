@@ -18,20 +18,9 @@ const PlayerModal = (props) => {
       onCancel={onCancel}
       footer={null}
       style={{ top: 20 }}
-      width={800}
+      width={'80%'}
     >
-      
         <div dangerouslySetInnerHTML={{ __html: html }} />
-        {/* <div>
-          <asciinema-player
-            src={
-              '/api/v1/host/record/download?record=' +
-              values.cast_file_name +
-              '&token=' +
-              localStorage.getItem('token')
-            }
-          ></asciinema-player>
-        </div> */}
     
     </Modal>
   );

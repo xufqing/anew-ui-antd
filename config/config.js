@@ -76,7 +76,7 @@ export default defineConfig({
                   component: './Account/settings',
                   //authority: ['admin'],
                 },
-              ]
+              ],
             },
             {
               path: '/asset',
@@ -88,6 +88,12 @@ export default defineConfig({
                   path: '/asset/host',
                   name: 'host',
                   component: './Asset/host',
+                  //authority: ['admin'],
+                },
+                {
+                  path: '/asset/group',
+                  name: 'AssetGroup',
+                  component: './Asset/group',
                   //authority: ['admin'],
                 },
                 {
@@ -108,7 +114,7 @@ export default defineConfig({
               path: '/system',
               name: 'system',
               //component: './Dashboard',
-              //authority: ['admin'],
+              authority: ['admin'],
               routes: [
                 {
                   path: '/system/user',
