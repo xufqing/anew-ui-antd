@@ -1,6 +1,6 @@
 import { DeleteOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { Button, Tooltip, Divider, Modal, message } from 'antd';
-import React, { useRef,useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
 import { queryRecords, deleteRecord } from './service';
@@ -60,10 +60,12 @@ const RecordList = () => {
     {
       title: '接入时间',
       dataIndex: 'connect_time',
+      search: false,
     },
     {
       title: '注销时间',
       dataIndex: 'logout_time',
+      search: false,
     },
     {
       title: '操作',
@@ -72,10 +74,13 @@ const RecordList = () => {
       render: (_, record) => (
         <>
           <Tooltip title="播放录像">
-            <VideoCameraOutlined style={{ fontSize: '17px', color: '#52c41a' }} onClick={() => {
+            <VideoCameraOutlined
+              style={{ fontSize: '17px', color: '#52c41a' }}
+              onClick={() => {
                 setValues(record);
                 handleModalVisible(true);
-              }} />
+              }}
+            />
           </Tooltip>
           <Divider type="vertical" />
           <Tooltip title="删除">

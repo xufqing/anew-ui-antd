@@ -12,7 +12,7 @@ import CreateForm from './components/CreateForm';
 import UpdateForm from './components/UpdateForm';
 import { queryHosts, deleteHost } from './service';
 import { queryDicts } from '@/pages/System/dict/service';
-import { history } from 'umi';
+import { queryGroups } from '@/pages/Asset/group/service';
 
 const HostList = () => {
   const [createModalVisible, handleModalVisible] = useState(false);
@@ -20,6 +20,7 @@ const HostList = () => {
   const [formValues, setFormValues] = useState({});
   const [hostsType, setHostsType] = useState([]);
   const [authsType, setAuthsType] = useState([]);
+  const [hostsGroup,setHostsGroup] = useState([]);
   const actionRef = useRef();
 
   const handleDelete = (record) => {
@@ -68,7 +69,30 @@ const HostList = () => {
     });
   }, []);
 
+  useEffect(() => {
+    queryGroups({ all: true }).then((res) => {
+      console.log(res)
+      if (Array.isArray(res.data.data)) {
+        setHostsGroup(
+          res.data.data.map((item) => ({
+            label: item.name,
+            value: item.id,
+          })),
+        );
+      }
+    });
+  }, []);
+
   const columns = [
+    {
+      title: '主机分组',
+      dataIndex: 'group_id',
+      valueType: 'select',
+      hideInTable: true,
+      fieldProps: {
+        options: hostsGroup,
+      },
+    },
     {
       title: '主机名',
       dataIndex: 'host_name',
