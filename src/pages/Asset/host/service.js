@@ -6,7 +6,7 @@ export async function queryHosts(params) {
 }
 
 export async function queryHostByID(id) {
-  return request('/api/v1/host/info/' + id)
+  return request('/api/v1/host/info/' + id);
 }
 
 export async function createHost(params) {
@@ -17,7 +17,7 @@ export async function createHost(params) {
 }
 
 export async function updateHost(id, params) {
-  return request('/api/v1/host/update/'+ id, {
+  return request('/api/v1/host/update/' + id, {
     method: 'PATCH',
     data: params,
   });

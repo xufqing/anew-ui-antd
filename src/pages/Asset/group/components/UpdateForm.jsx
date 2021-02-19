@@ -63,7 +63,7 @@ const UpdateForm = (props) => {
               height: 280,
             }}
             //operations={['加入', '退出']}
-            targetKeys={targetKeys}
+            targetKeys={targetKeys ? targetKeys : []}
             onChange={handleChange}
             render={(item) => `${item.title}(${item.description})`}
           />
