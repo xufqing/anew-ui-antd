@@ -18,7 +18,6 @@ import {
   Divider,
   Modal,
   Button,
-  Progress,
   Tooltip,
   message,
 } from 'antd';
@@ -34,70 +33,6 @@ const FileManager = (props) => {
   const [childrenDrawer, setChildrenDrawer] = useState(false);
   const [currentPathArr, setCurrentPathArr] = useState([]);
   const [initPath, setInitPath] = useState('');
-  const columns = [
-    {
-      title: '名称',
-      dataIndex: 'name',
-      render: (_, record) =>
-        record.isDir ? (
-          <div onClick={() => getFileData(connKey, record.path)} style={{ cursor: 'pointer' }}>
-            <FolderTwoTone />
-            <span style={{ color: '#1890ff', paddingLeft: 5 }}>{record.name}</span>
-          </div>
-        ) : (
-          <React.Fragment>
-            {record.isLink ? (
-              <div>
-                <LinkOutlined />
-                <Tooltip title="Is Link">
-                  <span style={{ color: '#3cb371', paddingLeft: 5 }}>{record.name}</span>
-                </Tooltip>
-              </div>
-            ) : (
-              <div>
-                <FileOutlined />
-                <span style={{ paddingLeft: 5 }}>{record.name}</span>
-              </div>
-            )}
-          </React.Fragment>
-        ),
-    },
-    {
-      title: '大小',
-      dataIndex: 'size',
-    },
-    {
-      title: '修改时间',
-      dataIndex: 'mtime',
-    },
-    {
-      title: '属性',
-      dataIndex: 'mode',
-    },
-    {
-      title: '操作',
-      dataIndex: 'option',
-      valueType: 'option',
-      render: (_, record) =>
-        !record.isDir && !record.isLink ? (
-          <>
-            <Tooltip title="下载文件">
-              <DownloadOutlined
-                style={{ fontSize: '17px', color: 'blue' }}
-                onClick={() => handleDownload(connKey, record.path)}
-              />
-            </Tooltip>
-            <Divider type="vertical" />
-            <Tooltip title="删除文件">
-              <DeleteOutlined
-                style={{ fontSize: '17px', color: 'red' }}
-                onClick={() => handleDelete(connKey, record.path)}
-              />
-            </Tooltip>
-          </>
-        ) : null,
-    },
-  ];
 
   const _dirSort = (item) => {
     return item.isDir;
@@ -203,6 +138,73 @@ const FileManager = (props) => {
     },
   };
 
+  
+  const columns = [
+    {
+      title: '名称',
+      dataIndex: 'name',
+      render: (_, record) =>
+        record.isDir ? (
+          <div onClick={() => getFileData(connKey, record.path)} style={{ cursor: 'pointer' }}>
+            <FolderTwoTone />
+            <span style={{ color: '#1890ff', paddingLeft: 5 }}>{record.name}</span>
+          </div>
+        ) : (
+          <React.Fragment>
+            {record.isLink ? (
+              <div>
+                <LinkOutlined />
+                <Tooltip title="Is Link">
+                  <span style={{ color: '#3cb371', paddingLeft: 5 }}>{record.name}</span>
+                </Tooltip>
+              </div>
+            ) : (
+              <div>
+                <FileOutlined />
+                <span style={{ paddingLeft: 5 }}>{record.name}</span>
+              </div>
+            )}
+          </React.Fragment>
+        ),
+    },
+    {
+      title: '大小',
+      dataIndex: 'size',
+    },
+    {
+      title: '修改时间',
+      dataIndex: 'mtime',
+    },
+    {
+      title: '属性',
+      dataIndex: 'mode',
+    },
+    {
+      title: '操作',
+      dataIndex: 'option',
+      valueType: 'option',
+      render: (_, record) =>
+        !record.isDir && !record.isLink ? (
+          <>
+            <Tooltip title="下载文件">
+              <DownloadOutlined
+                style={{ fontSize: '17px', color: 'blue' }}
+                onClick={() => handleDownload(connKey, record.path)}
+              />
+            </Tooltip>
+            <Divider type="vertical" />
+            <Tooltip title="删除文件">
+              <DeleteOutlined
+                style={{ fontSize: '17px', color: 'red' }}
+                onClick={() => handleDelete(connKey, record.path)}
+              />
+            </Tooltip>
+          </>
+        ) : null,
+    },
+  ];
+
+
   useEffect(() => {
     getFileData(connKey, '');
   }, []);
@@ -219,6 +221,7 @@ const FileManager = (props) => {
       width={800}
       visible={modalVisible}
       onClose={onCancel}
+      getContainer={false}
     >
       {/* <input style={{ display: 'none' }} type="file" ref={(ref) => (this.input = ref)} /> */}
       <div className={styles.drawerHeader}>

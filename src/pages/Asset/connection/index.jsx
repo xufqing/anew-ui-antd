@@ -24,7 +24,7 @@ const ConnectionList = () => {
           }
         });
       },
-      onCancel() {},
+      onCancel() { },
     });
   };
 
@@ -35,32 +35,25 @@ const ConnectionList = () => {
       width: 48,
     },
     {
-      title: '主机名',
-      dataIndex: 'host_name',
+      title: '用户名',
+      dataIndex: 'user_name',
     },
     {
-      title: '用户',
-      dataIndex: 'name',
+      title: '主机名',
+      dataIndex: 'host_name',
     },
     {
       title: 'IP地址',
       dataIndex: 'ip_address',
     },
     {
-      title: '端口',
-      dataIndex: 'port',
-    },
-    {
       title: '接入时间',
       dataIndex: 'connect_time',
-    },
-    {
-      title: '用户名',
-      dataIndex: 'user_name',
+      sorter: (a, b) => a.connect_time - b.connect_time,
     },
     {
       title: '标识',
-      dataIndex: 'key',
+      dataIndex: 'connect_id',
     },
     {
       title: '操作',
@@ -72,7 +65,7 @@ const ConnectionList = () => {
           <Tooltip title="注销">
             <DeleteOutlined
               style={{ fontSize: '17px', color: 'red' }}
-              onClick={() => handleDelete({ key: record.key })}
+              onClick={() => handleDelete({ key: record.connect_id })}
             />
           </Tooltip>
         </>

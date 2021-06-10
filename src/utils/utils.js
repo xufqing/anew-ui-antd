@@ -59,24 +59,41 @@ export const getRouteAuthority = (path, routeData) => {
   return authorities;
 };
 
-export const useWinSize = () => {
-  const [size, setSize] = useState({
-    width: document.documentElement.clientWidth,
-    height: document.documentElement.clientHeight,
-  });
+// export const useWinSize = () => {
+//   const [size, setSize] = useState({
+//     width: document.documentElement.clientWidth,
+//     height: document.documentElement.clientHeight,
+//   });
 
-  const onResize = useCallback(() => {
-    setSize({
-      width: document.documentElement.clientWidth,
-      height: document.documentElement.clientHeight,
-    });
-  }, []);
-  useEffect(() => {
-    window.addEventListener('resize', onResize);
-    return () => {
-      window.removeEventListener('resize', onResize);
-    };
-  }, []);
+//   const onResize = useCallback(() => {
+//     setSize({
+//       width: document.documentElement.clientWidth,
+//       height: document.documentElement.clientHeight,
+//     });
+//   }, []);
+//   useEffect(() => {
+//     window.addEventListener('resize', onResize);
+//     return () => {
+//       window.removeEventListener('resize', onResize);
+//     };
+//   }, []);
 
-  return size;
+//   return size;
+// };
+
+export const store = {
+  save: (name, value, type = 'localtorage') => {
+    if ((type || '').toLocaleLowerCase() === 'localstorage') {
+      localStorage.setItem(name, JSON.stringify(value));
+    } else if ((type || '').toLocaleLowerCase() === 'sessionstorage') {
+      sessionStorage.setItem(name, JSON.stringify(value));
+    }
+  },
+  get: (name, type = 'localStorage') => {
+    if ((type || '').toLocaleLowerCase() === 'localstorage') {
+      return JSON.parse(localStorage.getItem(name) || '{}');
+    } else if ((type || '').toLocaleLowerCase() === 'sessionstorage') {
+      return JSON.parse(sessionStorage.getItem(name) || '{}');
+    }
+  },
 };

@@ -6,11 +6,13 @@ import {
   UsergroupAddOutlined,
 } from '@ant-design/icons';
 import { Button, Tooltip, Divider, Modal, message, Menu } from 'antd';
+import { history } from 'umi';
 import React, { useEffect, useState, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable, { TableDropdown } from '@ant-design/pro-table';
 import CreateForm from './components/CreateForm';
 import UpdateForm from './components/UpdateForm';
+import DescPage from './components/Descriptions';
 import { queryHosts, deleteHost } from './service';
 import { queryDicts } from '@/pages/System/dict/service';
 import { queryGroups } from '@/pages/Asset/group/service';
@@ -18,6 +20,7 @@ import { queryGroups } from '@/pages/Asset/group/service';
 const HostList = () => {
   const [createModalVisible, handleModalVisible] = useState(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState(false);
+  const [descModalVisible, handleDescModalVisible] = useState(false);
   const [formValues, setFormValues] = useState({});
   const [hostsType, setHostsType] = useState([]);
   const [authsType, setAuthsType] = useState([]);
@@ -42,7 +45,7 @@ const HostList = () => {
           }
         });
       },
-      onCancel() {},
+      onCancel() { },
     });
   };
   useEffect(() => {
@@ -74,7 +77,7 @@ const HostList = () => {
   useEffect(() => {
     queryGroups({ all: true, not_null: true }).then((res) => {
       if (Array.isArray(res.data.data)) {
-        setHostsGroup([{ id: 0, name: '所有主机' }].concat(res.data.data));
+        setHostsGroup([{ id: 0, name: '所有主机' }, ...res.data.data]);
       }
     });
   }, []);
@@ -122,15 +125,16 @@ const HostList = () => {
             <CodeTwoTone
               style={{ fontSize: '17px', color: 'blue' }}
               onClick={() => {
-                // history.push('/asset/console?host_id=' + record.id.toString())
                 const content = `是否要接入主机 ${record.ip_address} 控制台？`;
                 Modal.confirm({
                   title: '注意',
                   content,
+                  centered: true,
                   onOk: () => {
-                    window.open('/ssh/console?host_id=' + record.id.toString());
+                    //history.push('/asset/ssh/console?host_id=' + record.id.toString())
+                    window.open('/asset/ssh/console?host_id=' + record.id.toString());
                   },
-                  onCancel() {},
+                  onCancel() { },
                 });
               }}
             />
@@ -141,7 +145,7 @@ const HostList = () => {
               style={{ fontSize: '17px', color: '#52c41a' }}
               onClick={() => {
                 setFormValues(record);
-                handleUpdateModalVisible(true);
+                handleDescModalVisible(true);
               }}
             />
           </Tooltip>
@@ -227,7 +231,7 @@ const HostList = () => {
                 }
               }}
               style={{ width: 156 }}
-              defaultSelectedKeys={['1']}
+              defaultSelectedKeys={['0']}
               defaultOpenKeys={['sub1']}
               mode="inline"
             >
@@ -273,6 +277,15 @@ const HostList = () => {
           }}
           modalVisible={updateModalVisible}
           values={formValues}
+        />
+      )}
+      {descModalVisible && (
+        <DescPage
+          actionRef={actionRef}
+          onCancel={() => {
+            handleDescModalVisible(false);
+          }}
+          modalVisible={descModalVisible}
         />
       )}
     </PageHeaderWrapper>

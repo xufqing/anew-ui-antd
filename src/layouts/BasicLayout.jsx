@@ -98,10 +98,12 @@ const BasicLayout = (props) => {
       breadcrumbRender={(routers = []) => [
         {
           path: '/',
-          breadcrumbName: '首页',
+          breadcrumbName: "首页",
         },
         ...routers,
       ]}
+
+      //breadcrumbRender={(routers = []) => [...routers]}
       itemRender={(route, params, routes, paths) => {
         const first = routes.indexOf(route) === 0;
         return first ? (

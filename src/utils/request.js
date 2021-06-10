@@ -84,7 +84,6 @@ request.interceptors.response.use(async (response) => {
       localStorage.removeItem('expires');
       localStorage.removeItem('anew-authority');
       localStorage.removeItem('user');
-      message.error('未登录或登录已过期，请重新登录。');
       history.push('/user/login')
     }
   } else {

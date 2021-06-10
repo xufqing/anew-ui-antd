@@ -42,20 +42,12 @@ const RecordList = () => {
       dataIndex: 'host_name',
     },
     {
-      title: '用户',
-      dataIndex: 'user',
-    },
-    {
       title: 'IP地址',
       dataIndex: 'ip_address',
     },
     {
-      title: '端口',
-      dataIndex: 'port',
-    },
-    {
       title: '标识',
-      dataIndex: 'key',
+      dataIndex: 'connect_id',
     },
     {
       title: '接入时间',
@@ -102,7 +94,7 @@ const RecordList = () => {
         toolBarRender={(action, { selectedRows }) => [
           selectedRows && selectedRows.length > 0 && (
             <Button
-              key="2"
+              key="1"
               type="primary"
               onClick={() => handleDelete({ ids: selectedRows.map((item) => item.id) })}
               danger

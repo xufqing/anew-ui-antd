@@ -5,4 +5,9 @@ module.exports = {
     page: true,
     REACT_APP_ENV: true,
   },
+  settings: {
+    react: {
+      version: "999.999.999"
+    }
+  }
 };

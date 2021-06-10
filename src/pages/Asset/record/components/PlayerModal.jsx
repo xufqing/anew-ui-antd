@@ -8,8 +8,8 @@ const PlayerModal = (props) => {
   useEffect(() => {
     if (!loaded) return;
   }, [loaded, error]);
-  const html = `<head><link rel="stylesheet" type="text/css" href="/asciinema-player.css" /></head><body><asciinema-player src="/api/v1/host/record/download?record=${
-    values.cast_file_name
+  const html = `<head><link rel="stylesheet" type="text/css" href="/asciinema-player.css" /></head><body><asciinema-player src="/api/v1/host/record/play?record=${
+    values.connect_id
   }&token=${localStorage.getItem('token')}"></asciinema-player></body>`;
   return (
     <Modal
