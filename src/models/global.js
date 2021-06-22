@@ -2,9 +2,10 @@ const GlobalModel = {
   namespace: 'global',
   state: {
     collapsed: false,
+    consoleWin: null,
   },
   effects: {
-    
+
   },
   reducers: {
     changeLayoutCollapsed(
@@ -14,6 +15,12 @@ const GlobalModel = {
       { payload },
     ) {
       return { ...state, collapsed: payload };
+    },
+    changeConsoleWin(
+      state,
+      { payload },
+    ) {
+      return { ...state, consoleWin: payload };
     },
   },
 };

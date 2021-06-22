@@ -40,6 +40,18 @@ export default defineConfig({
       component: '../layouts/SecurityLayout',
       routes: [
         {
+          path: '/asset/ssh',
+          component: '../layouts/BlankLayout',
+          routes: [
+            {
+              path: '/asset/ssh/console',
+              name: 'console',
+              component: './SSH/console',
+              //authority: ['admin'],
+            },
+          ],
+        },
+        {
           path: '/',
           component: '../layouts/BasicLayout',
           authority: ['admin', 'user'],
@@ -61,19 +73,6 @@ export default defineConfig({
                   path: '/account/settings',
                   name: 'settings',
                   component: './Account/settings',
-                  //authority: ['admin'],
-                },
-              ],
-            },
-            
-            {
-              path: '/asset/ssh',
-              component: '../layouts/BlankLayout',
-              routes: [
-                {
-                  path: '/asset/ssh/console',
-                  name: 'console',
-                  component: './SSH/console',
                   //authority: ['admin'],
                 },
               ],

@@ -5,8 +5,8 @@ import {
   CodeTwoTone,
   UsergroupAddOutlined,
 } from '@ant-design/icons';
+import { connect } from 'umi';
 import { Button, Tooltip, Divider, Modal, message, Menu } from 'antd';
-import { history } from 'umi';
 import React, { useEffect, useState, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ProTable, { TableDropdown } from '@ant-design/pro-table';
@@ -17,7 +17,7 @@ import { queryHosts, deleteHost } from './service';
 import { queryDicts } from '@/pages/System/dict/service';
 import { queryGroups } from '@/pages/Asset/group/service';
 
-const HostList = () => {
+const HostList = (props) => {
   const [createModalVisible, handleModalVisible] = useState(false);
   const [updateModalVisible, handleUpdateModalVisible] = useState(false);
   const [descModalVisible, handleDescModalVisible] = useState(false);
@@ -27,7 +27,30 @@ const HostList = () => {
   const [hostsGroup, setHostsGroup] = useState([]);
   const [group_id, setGroup_id] = useState();
   const actionRef = useRef();
+  const {
+    dispatch,
+    consoleWin,
+  } = props;
 
+  const handleConsoleWin = (payload) => {
+    if (dispatch) {
+      dispatch({
+        type: 'global/changeConsoleWin',
+        payload,
+      });
+    }
+  };
+
+  const setConsoleHosts = (val) => {
+    let hosts = JSON.parse(localStorage.getItem('TABS_TTY_HOSTS'))
+    if (hosts) {
+      hosts.push(val)
+    } else {
+      hosts = []
+      hosts.push(val)
+    }
+    localStorage.setItem('TABS_TTY_HOSTS', JSON.stringify(hosts));
+  }
   const handleDelete = (record) => {
     if (!record) return;
     if (Array.isArray(record.ids) && !record.ids.length) return;
@@ -125,20 +148,26 @@ const HostList = () => {
             <CodeTwoTone
               style={{ fontSize: '17px', color: 'blue' }}
               onClick={() => {
-                const content = `是否要接入主机 ${record.ip_address} 控制台？`;
-                Modal.confirm({
-                  title: '注意',
-                  content,
-                  centered: true,
-                  onOk: () => {
-                    //history.push('/asset/ssh/console?host_id=' + record.id.toString())
-                    window.open('/asset/ssh/console?host_id=' + record.id.toString());
-                  },
-                  onCancel() { },
-                });
+                let actKey = "tty0"
+                let hosts = JSON.parse(localStorage.getItem('TABS_TTY_HOSTS'))
+                if (hosts) {
+                  actKey = "tty" + hosts.length.toString()
+                } 
+                const hostsObj = { hostname: record.host_name, ipaddr: record.ip_address, port: record.port, id: record.id.toString(), actKey: actKey, secKey: null }
+                setConsoleHosts(hostsObj)
+                if (consoleWin) {
+                  if (!consoleWin.closed) {
+                    consoleWin.focus();
+                  } else {
+                    handleConsoleWin(window.open('/asset/ssh/console', 'consoleTrm'));
+                  }
+                } else {
+                  handleConsoleWin(window.open('/asset/ssh/console', 'consoleTrm'));
+                }
               }}
             />
           </Tooltip>
+
           <Divider type="vertical" />
           <Tooltip title="详情">
             <FileDoneOutlined
@@ -292,4 +321,9 @@ const HostList = () => {
   );
 };
 
-export default HostList;
+
+// 把窗口全局变量传递过来
+export default connect(({ global }) => ({
+  consoleWin: global.consoleWin,
+  consoleHosts: global.consoleHosts,
+}))(HostList);

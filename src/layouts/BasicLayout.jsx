@@ -15,6 +15,7 @@ import logo from '../assets/logo.svg';
 import IconFont from '@/components/IconFont'; // 自定义图标
 
 const noMatch = (
+
   <Result
     status={403}
     title="403"
@@ -33,10 +34,10 @@ const defaultFooterDom = (
 const loopMenuItem = (menus) =>
   Array.isArray(menus)
     ? menus.map(({ icon, children, ...item }) => ({
-        ...item,
-        icon: icon && <IconFont type={icon} />,
-        children: children && loopMenuItem(children),
-      }))
+      ...item,
+      icon: icon && <IconFont type={icon} />,
+      children: children && loopMenuItem(children),
+    }))
     : null;
 
 const BasicLayout = (props) => {
@@ -79,8 +80,9 @@ const BasicLayout = (props) => {
       },
     [location.pathname],
   );
-  const {} = useIntl();
+  const { } = useIntl();
   return (
+
     <ProLayout
       logo={logo}
       onCollapse={handleMenuCollapse}

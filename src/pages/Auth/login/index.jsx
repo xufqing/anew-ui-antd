@@ -1,7 +1,7 @@
 import { GithubOutlined } from '@ant-design/icons';
 import { Checkbox,Button } from 'antd';
 import React, { useState } from 'react';
-import { Link, connect } from 'umi';
+import { connect } from 'umi';
 import LoginForm from './components/Login';
 import styles from './style.less';
 const { Tab, UserName, Password, Submit } = LoginForm;
